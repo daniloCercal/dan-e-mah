@@ -10,7 +10,7 @@ import { Cover } from '@/components/Cover'
 import { GameCard } from '@/components/Marks'
 import { Shelf } from '@/components/Shelf'
 import { isMatch } from '@/lib/people'
-import { Mark, defaultName } from '@/components/Marks'
+import { Mark } from '@/components/Marks'
 import { Marker } from '@/components/Marker'
 import { RatingLine } from '@/components/Overlap'
 import { PairGlyph } from '@/components/icons'
@@ -24,6 +24,7 @@ export default async function Us() {
   const stats = clubStats(games, tags)
   const matches = games.filter((g) => !g.archived && isMatch(g))
   const people = [viewer.me, viewer.partner].filter((m) => m !== null)
+  const names = { danilo: 'Danilo', maellen: 'Maellen', ...Object.fromEntries(people.map((m) => [m.person, m.name])) }
 
   if (stats.total === 0) {
     return (
@@ -111,7 +112,7 @@ export default async function Us() {
                     <span className="row-text">
                       <span className="row-title">{g.title}</span>
                       <span className="row-meta">
-                        {defaultName('danilo')} {formatRating(g.ratings.danilo)}, {defaultName('maellen')} {formatRating(g.ratings.maellen)}
+                        {names.danilo} {formatRating(g.ratings.danilo)}, {names.maellen} {formatRating(g.ratings.maellen)}
                       </span>
                     </span>
                     <span className="row-score">

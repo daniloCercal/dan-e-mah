@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { EmptyPage } from '@/components/States'
+import { Mark } from '@/components/Marks'
 import { MascotPicker } from '@/components/MascotPicker'
+import { getViewer } from '@/lib/data/viewer'
 import { createClient } from '@/lib/supabase/server'
+import { ProfileForm } from './ProfileForm'
+import { ThemePicker } from './ThemePicker'
+import { WallpaperPicker } from './WallpaperPicker'
 
 export const metadata: Metadata = { title: 'Seu perfil' }
 
@@ -14,24 +18,51 @@ async function signOut() {
 }
 
 export default async function Profile() {
-  const supabase = await createClient()
-  const { data } = await supabase.auth.getClaims()
-  const email = typeof data?.claims?.email === 'string' ? data.claims.email : null
+  const viewer = await getViewer()
+  if (!viewer) return null
+  const { me, partner, prefs } = viewer
 
   return (
-    <>
-      <EmptyPage
-        title="Seu perfil"
-        heading={email ?? 'Você'}
-        actions={
-          <form action={signOut}>
-            <button className="btn" type="submit">Sair</button>
-          </form>
-        }
-      >
-        <p>Foto, nome, apelido, tema e papel de parede ficam aqui, guardados na sua conta.</p>
-      </EmptyPage>
+    <div className="page profile" data-person={me.person}>
+      <header className="profile-head">
+        <Mark person={me.person} size={96} named={false} />
+        <div>
+          <h1 className="h1">Seu perfil</h1>
+          <p className="quiet">{me.name}. Só você muda o que está aqui.</p>
+        </div>
+      </header>
+
+      <ProfileForm
+        key={`${me.name}|${me.photoPath}|${me.nicknames.join('|')}|${me.useNicknames}`}
+        person={me.person} name={me.name} hasPhoto={!!me.photoPath} nicknames={me.nicknames} useNicknames={me.useNicknames}
+      />
+
+      <ThemePicker />
+      <WallpaperPicker initial={prefs.wallpaper} />
       <MascotPicker />
-    </>
+
+      <section className="sec" aria-labelledby="h-exportar">
+        <h2 className="h2" id="h-exportar">Exportar tudo</h2>
+        <p className="quiet">Uma cópia de tudo o que o clube guardou: jogos, notas, sessões e tags. Serve de backup. Com a nota às cegas ligada, a nota do outro só vem se você já tiver dado a sua.</p>
+        <ul className="export-list">
+          <li><a className="btn btn--plain" href="/api/exportar?formato=json" download>Tudo, em JSON</a></li>
+          <li><a className="btn btn--plain" href="/api/exportar?formato=jogos" download>Jogos, em planilha (CSV)</a></li>
+          <li><a className="btn btn--plain" href="/api/exportar?formato=diario" download>Diário, em planilha (CSV)</a></li>
+        </ul>
+      </section>
+
+      {partner && (
+        <p className="profile-partner">
+          <span className="member-link" data-person={partner.person}>
+            <Mark person={partner.person} size={36} named={false} />
+            {partner.name} é o outro sócio. Só {partner.name} muda o que é dele.
+          </span>
+        </p>
+      )}
+
+      <form action={signOut} className="profile-exit">
+        <button className="btn" type="submit">Sair</button>
+      </form>
+    </div>
   )
 }

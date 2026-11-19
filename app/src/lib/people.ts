@@ -14,7 +14,14 @@ export interface Member {
   person: Person
   name: string
   mascot: MascotId | null
+  /** Short-lived signed address of the profile photo, null without one. */
+  photo: string | null
+  photoPath: string | null
+  nicknames: string[]
+  useNicknames: boolean
 }
+
+export const defaultName = (p: Person) => (p === 'danilo' ? 'Danilo' : 'Maellen')
 
 export type Status = 'quero' | 'lista' | 'jogando' | 'pausado' | 'zerado' | 'abandonado' | 'rejogar'
 

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from 'react'
 import type { MascotId } from '@/components/Mascot'
-import type { Person, Slot } from '@/lib/people'
+import { defaultName, type Person, type Slot } from '@/lib/people'
 
 export interface MemberInfo {
   slot: Slot
@@ -10,6 +10,9 @@ export interface MemberInfo {
   name: string
   mascot: MascotId | null
   partnerName: string | null
+  /** Both members' names and (signed) photo addresses, for avatars and labels anywhere. */
+  names: Record<Person, string>
+  photos: Record<Person, string | null>
 }
 
 const Ctx = createContext<MemberInfo | null>(null)
@@ -20,3 +23,13 @@ export function MemberProvider({ member, children }: { member: MemberInfo | null
 }
 
 export const useMember = () => useContext(Ctx)
+
+/** The name a person goes by on screen (their profile name), falling back to the default one. */
+export function usePersonName(person: Person): string {
+  return useContext(Ctx)?.names[person] ?? defaultName(person)
+}
+
+export function useNameOf(): (person: Person) => string {
+  const m = useContext(Ctx)
+  return (person) => m?.names[person] ?? defaultName(person)
+}

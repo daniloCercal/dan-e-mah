@@ -5,6 +5,7 @@ import { ToastProvider } from '@/components/Toast'
 import { getViewer } from '@/lib/data/viewer'
 import { MemberProvider } from '@/lib/member'
 import { THEME_COLORS, themeScript } from '@/lib/theme-script'
+import { wallpaperVars } from '@/lib/wallpaper'
 // Same order as the prototype: reset, tokens and chrome, then the parts, then later layers that refine them.
 import '@/styles/reset.css'
 import '@/styles/base.css'
@@ -52,12 +53,14 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const member = viewer && {
     slot: viewer.me.slot, person: viewer.me.person, name: viewer.me.name, mascot: viewer.me.mascot,
     partnerName: viewer.partner?.name ?? null,
+    names: { danilo: 'Danilo', maellen: 'Maellen', [viewer.me.person]: viewer.me.name, ...(viewer.partner && { [viewer.partner.person]: viewer.partner.name }) },
+    photos: { danilo: null, maellen: null, [viewer.me.person]: viewer.me.photo, ...(viewer.partner && { [viewer.partner.person]: viewer.partner.photo }) },
   }
   return (
     // The theme script sets data-b-theme before React hydrates, hence the suppressed warning on <html> only.
-    <html lang="pt-BR" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${display.variable} ${text.variable}`} style={viewer ? wallpaperVars(viewer.prefs.wallpaper) : undefined} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript(viewer?.prefs.theme ?? null) }} />
       </head>
       <body className="dir-b">
         <MemberProvider member={member}>

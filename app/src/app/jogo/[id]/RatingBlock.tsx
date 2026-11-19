@@ -7,7 +7,8 @@ import { formatRating, gapLine, type Person } from '@/lib/people'
 import { rateGame } from '@/app/actions/reviews'
 import { useSave } from '@/lib/useSave'
 import { RatingLine } from '@/components/Overlap'
-import { Mark, defaultName } from '@/components/Marks'
+import { Mark } from '@/components/Marks'
+import { useNameOf } from '@/lib/member'
 import { PairGlyph } from '@/components/icons'
 import { SaveButton, SaveError } from '@/components/States'
 
@@ -77,6 +78,7 @@ function Editor({ gameId, me, prev, onDone }: { gameId: number; me: Person; prev
 }
 
 function PersonReview({ person, review, mine, hidden, onEdit }: { person: Person; review: Review | null; mine: boolean; hidden?: boolean; onEdit?: () => void }) {
+  const defaultName = useNameOf()
   return (
     <div className="review" data-person={person}>
       <div className="review-head">
@@ -108,6 +110,7 @@ function PersonReview({ person, review, mine, hidden, onEdit }: { person: Person
 export function RatingBlock({ gameId, me, reviews, editing, setEditing }: {
   gameId: number; me: Person; reviews: GameReviews; editing: boolean; setEditing: (v: boolean) => void
 }) {
+  const defaultName = useNameOf()
   const router = useRouter()
   const [saved, setSaved] = useState(false)
   const partner = other(me)

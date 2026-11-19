@@ -4,7 +4,7 @@ import { useId } from 'react'
 import { motion } from 'motion/react'
 import { useCalm } from '@/lib/motion'
 import { formatRating, initialOf, type Person } from '@/lib/people'
-import { defaultName } from './Marks'
+import { useNameOf } from '@/lib/member'
 
 function useClipId(): string {
   return `b${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
@@ -69,6 +69,7 @@ interface RatingLineProps {
  * The mustard overlap only exists when both rated.
  */
 export function RatingLine({ danilo, maellen }: RatingLineProps) {
+  const defaultName = useNameOf()
   const clip = useClipId()
   const { slide } = useSlide()
   const both = danilo != null && maellen != null

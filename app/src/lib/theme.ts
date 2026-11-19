@@ -71,6 +71,22 @@ export function setDark(dark: boolean) {
   apply()
 }
 
+/** Picks light, dark, or null to follow the device again. */
+export function setChoice(choice: Choice | null) {
+  if (choice) return setDark(choice === 'dark')
+  try {
+    localStorage.removeItem(THEME_KEY)
+  } catch {
+    /* storage unavailable: nothing to clear */
+  }
+  apply()
+}
+
+/** The stored choice, null while following the device. */
+export function useThemeChoice(): Choice | null {
+  return useSyncExternalStore(subscribe, readChoice, () => null)
+}
+
 /** `dark` is false during server render and hydration, then the real value. */
 export function useTheme() {
   const dark = useSyncExternalStore(subscribe, isDark, () => false)

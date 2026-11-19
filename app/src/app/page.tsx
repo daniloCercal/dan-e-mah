@@ -12,10 +12,16 @@ function greeting(): string {
   return h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'
 }
 
+/** A different nickname each visit; the page is rendered per request, so this is fresh every time. */
+function pickOne(list: string[]): string {
+  return list[Math.floor(Math.random() * list.length)]
+}
+
 export default async function Home() {
   const [viewer, all] = await Promise.all([getViewer(), listGames()])
   const games = all.filter((g) => !g.archived)
-  const name = viewer?.me.name
+  const me = viewer?.me
+  const name = me && (me.useNicknames && me.nicknames.length ? pickOne(me.nicknames) : me.name)
   const hello = name ? `${greeting()}, ${name}` : 'Boas-vindas ao clube'
 
   if (games.length === 0) {

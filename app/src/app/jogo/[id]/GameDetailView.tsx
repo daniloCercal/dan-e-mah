@@ -12,7 +12,8 @@ import type { Tag } from '@/lib/filters'
 import { Cover } from '@/components/Cover'
 import { IconBack, IconCheck, PairGlyph } from '@/components/icons'
 import { Marker } from '@/components/Marker'
-import { Mark, Stamp, defaultName } from '@/components/Marks'
+import { Mark, Stamp } from '@/components/Marks'
+import { useNameOf } from '@/lib/member'
 import { Overlap } from '@/components/Overlap'
 import type { GameReviews } from '@/lib/data/reviews'
 import { RatingBlock } from './RatingBlock'
@@ -34,6 +35,7 @@ function StatusSelect({ label, value, disabled, onChange }: { label: string; val
 }
 
 function StampCard({ game, me, busy, onStamp }: { game: GameDetail; me: Person; busy: boolean; onStamp: () => void }) {
+  const defaultName = useNameOf()
   const done: Record<Person, boolean> = { danilo: isFinished(game.marks.danilo.status), maellen: isFinished(game.marks.maellen.status) }
   const both = done.danilo && done.maellen
   return (
@@ -171,6 +173,7 @@ function OurTags({ game, ours }: { game: GameDetail; ours: Tag[] }) {
 }
 
 export function GameDetailView({ game, me, ourTags, reviews }: { game: GameDetail; me: Person; ourTags: Tag[]; reviews: GameReviews }) {
+  const defaultName = useNameOf()
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()

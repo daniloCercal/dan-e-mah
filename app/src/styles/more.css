@@ -386,7 +386,8 @@ html[data-b-theme='dark']:has(.dir-b) { background: #1a1326; color-scheme: dark;
 }
 
 /* ---------- wallpaper: the viewer's chosen drawing behind the pages ---------- */
-.dir-b { background-image: var(--b-wall, none); background-size: var(--b-wall-size, auto); }
+.dir-b { background-image: var(--b-wall-l, none); background-size: var(--b-wall-size, auto); }
+html[data-b-theme='dark'] .dir-b { background-image: var(--b-wall-d, none); }
 .dir-b {
   .wall { display: grid; gap: 12px; margin-top: 32px; padding: 18px; background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card); }
   .wall-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 12px 10px; }
@@ -487,4 +488,12 @@ html[data-b-theme='dark']:has(.dir-b) { background: #1a1326; color-scheme: dark;
     &.active { color: var(--surface); }
   }
   .wall-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+}
+
+/* ---------- profile: export and exit ---------- */
+.dir-b {
+  .field .switch { display: flex; margin-bottom: 0; }
+  .export-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .profile-exit { margin-top: 28px; }
+  .profile .sec, .profile .mascot-pick { margin-top: 32px; }
 }

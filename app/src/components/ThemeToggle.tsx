@@ -1,12 +1,20 @@
 'use client'
 
+import { setPrefs } from '@/app/actions/prefs'
+import { useMember } from '@/lib/member'
 import { useTheme } from '@/lib/theme'
 
 /** Sun when it is dark (tap for light), moon when it is light (tap for dark). */
 export function ThemeToggle() {
-  const { dark, toggle } = useTheme()
+  const { dark, setDark } = useTheme()
+  const member = useMember()
+  const flip = () => {
+    setDark(!dark)
+    // The choice follows the account to other devices; a failed save leaves it on this one.
+    if (member) void setPrefs({ theme: dark ? 'light' : 'dark' }).catch(() => {})
+  }
   return (
-    <button type="button" className="iconbtn theme-toggle" onClick={toggle} aria-pressed={dark} aria-label="Modo escuro">
+    <button type="button" className="iconbtn theme-toggle" onClick={flip} aria-pressed={dark} aria-label="Modo escuro">
       <svg
         width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
