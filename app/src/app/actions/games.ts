@@ -254,7 +254,7 @@ export async function setRemoved(id: number, on: boolean): Promise<Result> {
 }
 
 export async function setMascot(id: MascotId): Promise<Result> {
-  if (id !== 'fantasma' && id !== 'roxinha') return fail('Mascote inválido.')
+  if (id !== 'fantasma' && id !== 'roxinha' && id !== 'kuromi') return fail('Mascote inválido.')
   const { me } = await requireViewer()
   const supabase = await createClient()
   const { error } = await supabase.from('members').update({ mascot: id }).eq('user_id', me.userId)
