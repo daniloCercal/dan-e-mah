@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import { Bricolage_Grotesque, Onest } from 'next/font/google'
 import { Shell } from '@/components/Shell'
+import { ToastProvider } from '@/components/Toast'
+import { getViewer } from '@/lib/data/viewer'
+import { MemberProvider } from '@/lib/member'
 import { THEME_COLORS, themeScript } from '@/lib/theme-script'
 // Same order as the prototype: reset, tokens and chrome, then the parts, then later layers that refine them.
 import '@/styles/reset.css'
@@ -44,7 +47,12 @@ export const viewport: Viewport = {
   ],
 }
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
+  const viewer = await getViewer()
+  const member = viewer && {
+    slot: viewer.me.slot, person: viewer.me.person, name: viewer.me.name, mascot: viewer.me.mascot,
+    partnerName: viewer.partner?.name ?? null,
+  }
   return (
     // The theme script sets data-b-theme before React hydrates, hence the suppressed warning on <html> only.
     <html lang="pt-BR" className={`${display.variable} ${text.variable}`} suppressHydrationWarning>
@@ -52,7 +60,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="dir-b">
-        <Shell>{children}</Shell>
+        <MemberProvider member={member}>
+          <ToastProvider>
+            <Shell>{children}</Shell>
+          </ToastProvider>
+        </MemberProvider>
       </body>
     </html>
   )

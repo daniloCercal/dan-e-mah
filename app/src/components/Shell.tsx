@@ -5,8 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, type Transition } from 'motion/react'
 import { useCalm } from '@/lib/motion'
-import { useMascot } from '@/lib/mascot'
+import { useMascot, useMascotSync } from '@/lib/mascot'
+import { useMember } from '@/lib/member'
 import { Mascot } from './Mascot'
+import { Mark } from './Marks'
+import { ToastHost } from './Toast'
 import { IconDiary, IconHome, IconLibrary, IconPlus, PairGlyph } from './icons'
 import { OfflineBanner } from './OfflineBanner'
 import { ThemeToggle } from './ThemeToggle'
@@ -53,6 +56,8 @@ function TabLink({ href, label, icon, active, slide }: {
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const calm = useCalm()
+  const member = useMember()
+  useMascotSync()
   // The active-tab pill slides from the old tab to the new one instead of jumping.
   const slide: Transition = calm ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }
 
@@ -90,9 +95,12 @@ export function Shell({ children }: { children: ReactNode }) {
               Adicionar jogo
             </Link>
             <ThemeToggle />
-            <Link className="top-me" href="/perfil" aria-label="Seu perfil">
-              {/* Placeholder until sign-in exists: an empty seat, drawn like the empty circles of the mark. */}
-              <span className="mark mark--empty" style={{ ['--s' as string]: '36px' }} aria-hidden="true" />
+            <Link className="top-me" href="/perfil" aria-label={member ? `Seu perfil, ${member.name}` : 'Seu perfil'}>
+              {member ? (
+                <Mark person={member.person} size={36} named={false} />
+              ) : (
+                <span className="mark mark--empty" style={{ ['--s' as string]: '36px' }} aria-hidden="true" />
+              )}
             </Link>
           </div>
         </div>
@@ -115,6 +123,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <TabLink key={d.href} {...d} active={isActive(pathname, d.href)} slide={slide} />
         ))}
       </nav>
+      <ToastHost />
     </>
   )
 }

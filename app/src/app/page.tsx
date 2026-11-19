@@ -1,21 +1,101 @@
 import Link from 'next/link'
+import { Cover } from '@/components/Cover'
+import { GameCard } from '@/components/Marks'
 import { PairGlyph } from '@/components/icons'
+import { Shelf } from '@/components/Shelf'
+import { isMatch, listGames } from '@/lib/data/games'
+import { getViewer } from '@/lib/data/viewer'
 
-export default function Home() {
-  return (
-    <div className="page">
-      <h1 className="hello">Boas-vindas ao clube</h1>
-      <div className="empty">
-        <PairGlyph size={36} />
-        <h2 className="h2">A estante ainda está vazia</h2>
-        <p className="body">
-          Quando vocês adicionarem jogos, aparecem aqui o que estão jogando, o que os dois querem jogar e as últimas sessões.
-        </p>
-        <div className="empty-actions">
-          <Link className="btn btn--both" href="/adicionar">Adicionar o primeiro jogo</Link>
-          <Link className="btn" href="/biblioteca">Abrir a biblioteca</Link>
+function greeting(): string {
+  const h = Number(new Intl.DateTimeFormat('pt-BR', { hour: 'numeric', hour12: false, timeZone: 'America/Sao_Paulo' }).format(new Date())) % 24
+  return h < 5 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'
+}
+
+export default async function Home() {
+  const [viewer, all] = await Promise.all([getViewer(), listGames()])
+  const games = all.filter((g) => !g.archived)
+  const name = viewer?.me.name
+  const hello = name ? `${greeting()}, ${name}` : 'Boas-vindas ao clube'
+
+  if (games.length === 0) {
+    return (
+      <div className="page">
+        <h1 className="hello">{hello}</h1>
+        <div className="empty">
+          <PairGlyph size={36} />
+          <h2 className="h2">A estante ainda está vazia</h2>
+          <p className="body">
+            Quando vocês adicionarem jogos, aparecem aqui o que estão jogando, o que os dois querem jogar e as últimas sessões.
+          </p>
+          <div className="empty-actions">
+            <Link className="btn btn--both" href="/adicionar">Adicionar o primeiro jogo</Link>
+            <Link className="btn" href="/biblioteca">Abrir a biblioteca</Link>
+          </div>
         </div>
       </div>
+    )
+  }
+
+  const current = games.find((g) => g.shared === 'jogando')
+  const matches = games.filter(isMatch)
+  const recent = games.slice(0, 8)
+
+  return (
+    <div className="page home">
+      <h1 className="hello" data-person={viewer?.me.person}>{hello}</h1>
+
+      <div className="home-top">
+        {current && (
+          <Link className="now press" href={`/jogo/${current.id}`}>
+            <Cover title={current.title} src={current.cover} eager />
+            <span className="now-text">
+              <span className="now-label">Vocês estão jogando</span>
+              <span className="now-title">{current.title}</span>
+              <span className="now-go">Abrir o jogo</span>
+            </span>
+          </Link>
+        )}
+
+        <Link className="draw-entry press" href="/sortear">
+          <span className="draw-entry-text">
+            <span className="draw-entry-title">O que vamos jogar hoje?</span>
+            <span className="draw-entry-sub">
+              {matches.length > 0 ? `${matches.length} ${matches.length === 1 ? 'jogo que nós dois queremos' : 'jogos que nós dois queremos'}. A gente sorteia um.` : 'A gente sorteia um para hoje, sem discussão.'}
+            </span>
+          </span>
+          <PairGlyph size={44} />
+        </Link>
+      </div>
+
+      <section className="sec" aria-labelledby="h-match">
+        <div className="sec-head">
+          <h2 className="h2" id="h-match">
+            <PairGlyph size={18} />
+            Nós dois queremos jogar
+          </h2>
+        </div>
+        {matches.length ? (
+          <Shelf label="Jogos que nós dois queremos">
+            {matches.map((g, i) => (
+              <li key={g.id}><GameCard game={g} tilt={i % 2 ? 'b' : 'a'} /></li>
+            ))}
+          </Shelf>
+        ) : (
+          <p className="quiet">Ainda não tem jogo que os dois marcaram. Marque “quero jogar” em algum e espere a outra metade.</p>
+        )}
+      </section>
+
+      <section className="sec" aria-labelledby="h-novos">
+        <div className="sec-head">
+          <h2 className="h2" id="h-novos">Adicionados por último</h2>
+          <Link className="sec-link" href="/biblioteca">Ver a biblioteca</Link>
+        </div>
+        <Shelf label="Jogos adicionados por último">
+          {recent.map((g, i) => (
+            <li key={g.id}><GameCard game={g} tilt={i % 2 ? 'b' : 'a'} /></li>
+          ))}
+        </Shelf>
+      </section>
     </div>
   )
 }

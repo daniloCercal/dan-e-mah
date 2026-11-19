@@ -1,17 +1,16 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { EmptyPage } from '@/components/States'
+import { Suspense } from 'react'
+import { listGames } from '@/lib/data/games'
+import { LibraryView } from './LibraryView'
 
 export const metadata: Metadata = { title: 'Biblioteca' }
 
-export default function Library() {
+export default async function Library() {
+  const games = await listGames()
+  // useSearchParams in the view needs a boundary; the data is already here, so nothing visible waits on it.
   return (
-    <EmptyPage
-      title="Biblioteca"
-      heading="Nenhum jogo por aqui ainda"
-      actions={<Link className="btn btn--both" href="/adicionar">Adicionar jogo</Link>}
-    >
-      <p>Tudo o que vocês jogaram, estão jogando e querem jogar fica nesta estante, com busca e filtros.</p>
-    </EmptyPage>
+    <Suspense>
+      <LibraryView games={games} />
+    </Suspense>
   )
 }
