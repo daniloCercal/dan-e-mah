@@ -1,0 +1,144 @@
+/* Direction B — Clube de dois. Tokens, type and chrome.
+   Ported from prototypes/design-lab (direction B). The fonts come from next/font in the root layout,
+   which declares --font-d (Bricolage Grotesque) and --font-t (Onest) on <html>. */
+.dir-b {
+  --bg: #efecf7;
+  --surface: #fcfbff;
+  --ink: #241a35;
+  --ink-2: #5f5673;
+  --danilo: #17666e;
+  --maellen: #bf3468;
+  --both: #f2c14e;
+  --line: #d9d3e8;
+  --line-strong: #a79dc0;
+  --table: #e2ddf0;
+  --both-soft: #fbedc4;
+  --danilo-soft: #d9eaeb;
+  --maellen-soft: #f8dde7;
+  --shadow: 3px 3px 0 var(--ink);
+  --r-card: 16px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-t);
+  font-size: 1rem;
+  line-height: 1.5;
+  accent-color: var(--ink);
+  caret-color: var(--maellen);
+  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-width: thin;
+
+  [data-person='danilo'] { --who: var(--danilo); --who-soft: var(--danilo-soft); }
+  [data-person='maellen'] { --who: var(--maellen); --who-soft: var(--maellen-soft); }
+
+  ::selection { background: var(--both); color: var(--ink); }
+  :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
+  :focus:not(:focus-visible) { outline: none; }
+  a { text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+  strong { font-weight: 700; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .skip {
+    position: absolute; left: 12px; top: -80px; z-index: 100; padding: 12px 16px;
+    background: var(--ink); color: var(--surface); border-radius: 12px; font-weight: 600;
+    &:focus { top: 12px; }
+  }
+
+  /* ---------- type ---------- */
+  .hello, .h1, .h2, .h3 { font-family: var(--font-d); font-optical-sizing: auto; text-wrap: balance; }
+  .hello {
+    font-size: clamp(2.125rem, 1.35rem + 3.6vw, 4rem); font-weight: 750; font-stretch: 80%;
+    line-height: 1; letter-spacing: -0.02em;
+  }
+  .h1 {
+    font-size: clamp(1.875rem, 1.45rem + 1.9vw, 3rem); font-weight: 700; font-stretch: 85%;
+    line-height: 1.04; letter-spacing: -0.015em;
+  }
+  .h2 {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 1.375rem; font-weight: 650; font-stretch: 92%; line-height: 1.15; letter-spacing: -0.01em;
+  }
+  .h3 { font-size: 1.125rem; font-weight: 650; line-height: 1.2; }
+  .quiet { color: var(--ink-2); font-size: 0.9375rem; }
+  .body { font-size: 1rem; max-width: 65ch; }
+
+  /* ---------- chrome ---------- */
+  .top-in {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 1180px; margin-inline: auto; padding: 6px 16px 0; min-height: 52px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+    font-family: var(--font-d); font-weight: 700; font-stretch: 90%; font-size: 1.0625rem; text-decoration: none;
+  }
+  .top-nav, .top-side .top-add { display: none; }
+  .brand span { white-space: nowrap; }
+  .top-side { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+  .top-me { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: 50%; }
+
+  main { display: block; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  main:focus { outline: none; }
+  .page { max-width: 1180px; margin-inline: auto; padding: 8px 16px 0; }
+
+  .tabbar {
+    position: fixed; inset: auto 0 0 0; z-index: 30;
+    display: grid; grid-template-columns: repeat(5, 1fr); align-items: end;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    background: var(--surface); border-top: 2px solid var(--ink);
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;
+    min-height: 52px; font-size: 0.75rem; font-weight: 600; text-decoration: none; color: var(--ink);
+    &:active .tab-ico, &:active .tab-plus { transform: scale(0.94); }
+  }
+  .tab-ico {
+    display: grid; place-items: center; width: 52px; height: 30px; border-radius: 999px;
+    transition: transform 120ms var(--ease);
+  }
+  .tab.active .tab-ico { background: var(--ink); color: var(--surface); }
+  .tab.active .pg-line { stroke: var(--surface); }
+  .tab-plus {
+    display: grid; place-items: center; width: 54px; height: 54px; margin-top: -26px;
+    background: var(--both); border: 2px solid var(--ink); border-radius: 50%; box-shadow: var(--shadow);
+    transition: transform 120ms var(--ease);
+  }
+  .tab--add.active .tab-plus { background: var(--ink); color: var(--both); }
+
+  /* ---------- sections ---------- */
+  .sec { margin-top: 36px; }
+  .sec > .h2, .sec-head { margin-bottom: 10px; min-height: 44px; }
+  .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sec-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.9375rem; font-weight: 600; white-space: nowrap; }
+  .sec--tight { margin-top: 0; }
+  .sec--tight > .h3 { margin-bottom: 8px; }
+
+  @media (min-width: 900px) {
+    .top {
+      position: sticky; top: 0; z-index: 30;
+      background: var(--surface); border-bottom: 2px solid var(--ink);
+    }
+    .top-in { padding: 0 40px; min-height: 68px; gap: 32px; }
+    .brand { font-size: 1.25rem; }
+    .top-nav {
+      display: flex; gap: 4px;
+      a {
+        display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+        border-radius: 999px; font-weight: 600; text-decoration: none;
+        &:hover { background: var(--bg); }
+        &.active { background: var(--ink); color: var(--surface); }
+      }
+    }
+    .top-side .top-add { display: inline-flex; min-height: 44px; }
+    .tabbar { display: none; }
+    main { padding-bottom: 96px; }
+    .page { padding: 32px 40px 0; }
+    .sec { margin-top: 56px; }
+    .h2 { font-size: 1.625rem; }
+  }
+}
+

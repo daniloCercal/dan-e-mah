@@ -1,0 +1,150 @@
+/* Direction B — add game, draw, diary, us, style guide. */
+.dir-b {
+  /* ---------- add ---------- */
+  .add { max-width: 760px; }
+  .add > .h1 { margin: 6px 0 12px; }
+  .steps {
+    display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 20px;
+    li { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-size: 0.875rem; }
+    li[aria-current] { color: var(--ink); font-weight: 600; }
+    li[aria-current] .steps-n { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+    li[data-done] .steps-n { background: var(--both); color: var(--ink); border-color: var(--ink); }
+  }
+  .steps-n {
+    display: inline-grid; place-items: center; width: 24px; height: 24px;
+    border: 1.5px solid var(--ink-2); border-radius: 50%; font-size: 0.8125rem; font-weight: 700;
+  }
+  .add-step { display: grid; gap: 12px; }
+  .add-step > .h2 { margin-bottom: 2px; }
+  .confirm {
+    display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; align-items: start; padding: 14px;
+    background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card);
+  }
+  .confirm-text { display: grid; gap: 8px; }
+  .confirm-title { font-family: var(--font-d); font-weight: 700; font-stretch: 88%; font-size: 1.5rem; line-height: 1.1; }
+  .optional { display: grid; gap: 16px; margin-top: 16px; padding-top: 20px; border-top: 1px solid var(--line-strong); }
+  .saved-card {
+    grid-template-columns: 104px minmax(0, 1fr); gap: 18px; align-items: start; padding: 18px 16px;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card);
+    > div { display: grid; gap: 12px; }
+  }
+  .saved-want { display: flex; align-items: center; gap: 12px; }
+
+  /* ---------- draw ---------- */
+  .draw > .h1 { margin: 6px 0 8px; }
+  .draw-lede { max-width: 48ch; }
+  .draw-cols { display: grid; gap: 16px; margin-top: 16px; }
+  .draw-stage {
+    position: relative; display: grid; place-items: center; min-height: 340px; padding: 34px 16px 30px; overflow: hidden;
+    background: var(--table); border-radius: 22px;
+    background-image: radial-gradient(var(--line-strong) 1.2px, transparent 1.4px); background-size: 18px 18px;
+  }
+  .drawcard {
+    position: relative; width: min(200px, 62%); padding: 10px;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card); box-shadow: 5px 5px 0 var(--ink);
+    .cover { padding: 0; border: 0; border-radius: 8px; }
+  }
+  .drawcard-text { padding: 10px 2px 2px; }
+  .drawcard-title { font-family: var(--font-d); font-weight: 700; font-stretch: 88%; font-size: 1.375rem; line-height: 1.1; }
+  .drawcard-marks {
+    position: absolute; top: -16px; right: -14px; display: flex;
+    .stamp { background: var(--surface); }
+    .stamp + .stamp { margin-left: -10px; }
+  }
+  .drawcard-both {
+    position: absolute; left: -12px; bottom: 82px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 8px;
+    background: var(--both); border: 2px solid var(--ink); border-radius: 999px; font-size: 0.875rem; font-weight: 700; rotate: -4deg;
+  }
+  .drawcard-both--in { animation: b-pop 180ms 640ms var(--ease) both; }
+  .draw-skip { position: absolute; top: 6px; left: 0; right: 0; text-align: center; color: var(--ink-2); font-size: 0.875rem; }
+  .draw-wait { display: grid; justify-items: center; gap: 14px; max-width: 24ch; text-align: center; font-weight: 500; }
+  .draw-actions { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 12px; .btn { padding-inline: 8px; white-space: nowrap; } }
+  .draw-done { padding: 16px; background: var(--both); border: 2px solid var(--ink); border-radius: var(--r-card); }
+  .draw-done-title { font-family: var(--font-d); font-weight: 700; font-stretch: 88%; font-size: 1.5rem; line-height: 1.1; margin-bottom: 10px; }
+  .draw-narrow { display: grid; gap: 16px; margin-top: 24px; }
+
+  /* ---------- diary ---------- */
+  .diary { max-width: 780px; }
+  .month { margin-top: 30px; }
+  .month-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+  .diary-item { display: grid; grid-template-columns: minmax(0, 1fr) 54px; gap: 12px; align-items: start; }
+  .diary-item + .diary-item { border-top: 1px dashed var(--line-strong); }
+  .diary-cover { margin-top: 14px; .cover { padding: 2px; border-width: 1.5px; border-radius: 8px; img, .cover-missing { border-radius: 4px; } } .cover-missing-title, .cover-missing-note { display: none; } }
+
+  /* ---------- us ---------- */
+  .us > .h1 { margin: 6px 0 0; }
+  .us .sec:first-of-type { margin-top: 20px; }
+  .members { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px; }
+  .member {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px; text-align: left;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card);
+    &[aria-checked='true'] { background: var(--who-soft); }
+    &[aria-checked='false'] { box-shadow: none; border-color: var(--line-strong); }
+  }
+  .member-name { margin-top: 6px; font-family: var(--font-d); font-weight: 700; font-size: 1.375rem; line-height: 1.1; }
+  .member-state { font-size: 0.9375rem; }
+  .facts {
+    display: grid; margin: 4px 0 10px;
+    > div { display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line-strong); }
+    dd { margin: 0; min-width: 2.2ch; font-family: var(--font-d); font-weight: 800; font-stretch: 78%; font-size: 2.25rem; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .facts-both dd { padding: 2px 8px; margin-left: -8px; background: var(--both); border-radius: 8px; }
+  }
+  .us-cols { display: grid; }
+  .diverge { display: grid; gap: 12px; }
+  .diverge-item {
+    display: grid; gap: 6px; padding: 14px 12px; text-decoration: none;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card);
+    box-shadow: var(--shadow); transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+    &:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  }
+  .diverge-title { font-family: var(--font-d); font-weight: 700; font-size: 1.25rem; padding-inline: 4px; }
+  .diverge-line { font-size: 0.9375rem; padding-inline: 4px; }
+  .us-foot { margin-top: 40px; font-size: 0.9375rem; a { display: inline-flex; min-height: 44px; align-items: center; } }
+
+  /* ---------- style guide ---------- */
+  .style-idea { max-width: 60ch; margin-top: 10px; font-size: 1.0625rem; }
+  .style .h3 { margin: 18px 0 8px; }
+  .swatches {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;
+    li { display: grid; gap: 2px; align-content: start; }
+    code { font-family: ui-monospace, 'Cascadia Mono', Menlo, monospace; font-size: 0.875rem; }
+    .quiet { font-size: 0.875rem; line-height: 1.35; }
+  }
+  .swatch { height: 72px; margin-bottom: 6px; border: 2px solid var(--ink); border-radius: 14px; }
+  .specimens li { padding: 14px 0; border-bottom: 1px solid var(--line-strong); }
+  .specimen-name { margin-top: 6px; color: var(--ink-2); font-size: 0.875rem; }
+  .demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .demo-item { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+  .demo-grid { display: grid; gap: 14px; }
+  .demo-grid .rating-card { display: grid; gap: 8px; text-align: center; }
+  .grid--demo { max-width: 720px; }
+  .motion-demo {
+    display: grid; gap: 12px; align-content: start; justify-items: start; padding: 16px;
+    background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card);
+    .h3 { margin: 0; }
+  }
+  .motion-stage {
+    display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; min-height: 120px; padding: 14px;
+    background: var(--bg); border-radius: 12px;
+    > .cover { width: 64px; }
+  }
+  .motion-stage--draw { min-height: 420px; overflow: hidden; background: var(--table); }
+
+  @media (min-width: 700px) {
+    .demo-grid { grid-template-columns: 1fr 1fr; }
+    .facts { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+    .confirm { grid-template-columns: 160px minmax(0, 1fr); gap: 24px; padding: 20px; }
+    .saved-card { grid-template-columns: 140px minmax(0, 1fr); gap: 28px; padding: 24px; }
+  }
+  @media (min-width: 900px) {
+    .draw-cols { grid-template-columns: minmax(0, 1fr) 400px; gap: 48px; align-items: start; margin-top: 28px; }
+    .draw-stage { min-height: 520px; }
+    .drawcard { width: 270px; }
+    .draw-narrow { margin-top: 32px; }
+    .facts { grid-template-columns: repeat(3, 1fr); }
+    .members { max-width: 560px; }
+    .us-cols { grid-template-columns: 1fr 1fr; gap: 56px; }
+    .demo-grid { grid-template-columns: repeat(3, 1fr); }
+    .motion-demo--tall { grid-row: span 2; }
+  }
+}

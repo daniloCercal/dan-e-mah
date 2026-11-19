@@ -1,0 +1,181 @@
+/* Direction B — waiting, failure, entrance and transitions. */
+@keyframes b-drift-d {
+  0%, 100% { transform: none; }
+  50% { transform: translateX(-7px); }
+}
+@keyframes b-drift-m {
+  0%, 100% { transform: none; }
+  50% { transform: translateX(7px); }
+}
+@keyframes b-lens {
+  0%, 100% { opacity: 1; }
+  22%, 78% { opacity: 0; }
+}
+@keyframes b-pulse {
+  from { opacity: 1; }
+  to { opacity: 0.45; }
+}
+@keyframes b-page {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes b-fade-out {
+  to { opacity: 0; }
+}
+@keyframes b-sheet-down {
+  to { transform: translateY(100%); }
+}
+@keyframes b-sheet-side-out {
+  to { transform: translateX(100%); }
+}
+@keyframes b-door-d {
+  from { transform: translateX(-26px); opacity: 0; }
+}
+@keyframes b-door-m {
+  from { transform: translateX(26px); opacity: 0; }
+}
+@keyframes b-rise {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+/* View transitions live on the document root, so they cannot sit under .dir-b; the names are B's own. */
+::view-transition-group(b-cover) { animation-duration: 320ms; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+html:has(.dir-b)::view-transition-old(root),
+html:has(.dir-b)::view-transition-new(root) { animation-duration: 180ms; }
+
+.dir-b {
+  [data-vt='cover'], .detail-head .cover { view-transition-name: b-cover; }
+
+  /* Page to page: short and quiet. It never blocks input. */
+  /* No forwards fill: a finished animation must not leave .page as a stacking context (fixed panels live inside it). */
+  .page { animation: b-page 170ms var(--ease) backwards; }
+
+  /* ---------- loader ---------- */
+  .loader { flex: none; overflow: visible; }
+  .loader-d { animation: b-drift-d 1400ms ease-in-out infinite; }
+  .loader-m { animation: b-drift-m 1400ms ease-in-out infinite; }
+  .loader-both { animation: b-lens 1400ms ease-in-out infinite; }
+  .btn--ink .loader .pg-line { stroke: var(--surface); }
+  .pageloader {
+    display: grid; justify-items: center; gap: 14px; padding: 64px 0;
+    color: var(--ink-2); font-weight: 600;
+  }
+  .motion-stage .pageloader { padding: 8px 0; }
+
+  .savebtn { display: inline-grid; place-items: center; }
+  .savebtn-face { grid-area: 1 / 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; }
+  .savebtn-face[data-hidden] { visibility: hidden; }
+  .savebtn:disabled { opacity: 1; cursor: progress; transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+  .savebtn.btn--ink:disabled { box-shadow: 1px 1px 0 var(--line-strong); }
+  .select select:disabled { opacity: 0.55; cursor: progress; }
+  .states-saving { font-size: 0.875rem; font-weight: 600; &:not(:empty) { margin-top: 8px; } }
+  .search-status { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+
+  /* ---------- skeletons: outlined in Linha, same boxes as the real content ---------- */
+  .sk { display: block; background: rgb(252 251 255 / 0.55); border: 1.5px solid var(--line); border-radius: 8px; }
+  .sk-group { animation: b-pulse 900ms ease-in-out infinite alternate; }
+  .sk-line { height: 13px; margin: 3px 0; border-radius: 999px; }
+  .sk-line--tall { height: 22px; margin: 2px 0 4px; }
+  .sk-cover { aspect-ratio: 2 / 3; border-width: 2px; border-radius: 14px; }
+  .sk-card .sk-cover { margin-bottom: 6px; }
+  .sk-card .sk-line:last-child { margin-bottom: 5px; }
+  .sk-row .sk-cover, .sk-now .sk-cover { border-radius: 8px; }
+  .rows .sk-row + .sk-row, .sk-group > .sk-row + .sk-row { border-top: 1px solid var(--line); }
+  .sk-row { grid-template-columns: 48px minmax(0, 1fr); }
+  .sk-now { border-color: var(--line); box-shadow: none; }
+  .sk-now .now-art { display: none; border-color: var(--line); }
+  .sk-now .now-text { align-self: stretch; justify-content: center; }
+  .sk-now .sk-line { align-self: flex-start; }
+  .sk-pill { width: 108px; height: 34px; margin-top: 8px; border-radius: 999px; }
+  .sk-day { width: 40px; height: 40px; }
+  .sk-note + .sk-note { border-top: 1px dashed var(--line); }
+  .sk-block { border-radius: var(--r-card); }
+  .detail-sk .sk-group { display: grid; gap: 24px; margin-top: 24px; }
+  .detail-head .sk-cover { background: var(--surface); }
+  .shelf > .shelf-item { flex: 0 0 128px; }
+  .sk-demo { width: 100%; }
+  .sk-demo .sk-now .now-art { display: none; }
+  .sk-demo--cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  /* Covers: placeholder first, the image fades in when it arrives. */
+  .cover { background: linear-gradient(var(--table), var(--table)) content-box, var(--surface); }
+  .cover img { opacity: 0; transition: opacity 220ms ease-out; }
+  .cover img[data-arrived] { opacity: 1; }
+
+  /* ---------- failures ---------- */
+  .alert {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 12px; align-items: start; padding: 12px 14px;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: 14px;
+    &::before {
+      content: '!'; display: grid; place-items: center; width: 24px; height: 24px;
+      background: var(--ink); color: var(--surface); border-radius: 50%; font-family: var(--font-d); font-weight: 800; font-size: 0.9375rem;
+    }
+    > * { grid-column: 2; }
+    > .btn { justify-self: start; }
+  }
+  .alert--block { padding: 16px; .h3 { margin-top: 1px; } }
+  .offline {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px;
+    background: var(--ink); color: var(--surface); font-size: 0.9375rem; line-height: 1.4;
+  }
+  .offline-dot { flex: none; width: 14px; height: 14px; margin-top: 3px; border: 2px dashed var(--both); border-radius: 50%; }
+  .motion-demo .offline { border-radius: 12px; }
+
+  .dead {
+    display: grid; justify-items: start; gap: 14px; max-width: 620px; padding-top: 40px;
+    .h1 { margin-top: 6px; }
+  }
+  .dead-mark { overflow: visible; }
+  .dead-text { max-width: 46ch; font-size: 1.0625rem; }
+  .dead-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+  /* ---------- the door ---------- */
+  .outside { padding-bottom: 0; }
+  .door {
+    display: grid; align-content: center; justify-items: center; gap: 30px;
+    min-height: 100dvh; padding: 40px 24px 72px; text-align: center;
+  }
+  .door-mark { overflow: visible; max-width: 100%; height: auto; }
+  .door-body { display: grid; justify-items: center; gap: 16px; }
+  .door-name {
+    font-family: var(--font-d); font-weight: 800; font-stretch: 76%;
+    font-size: clamp(3.25rem, 15vw, 5.5rem); line-height: 0.88; letter-spacing: -0.025em;
+  }
+  .door-title { font-family: var(--font-d); font-weight: 700; font-stretch: 85%; font-size: clamp(1.875rem, 1.45rem + 1.9vw, 2.75rem); line-height: 1.04; max-width: 16ch; text-wrap: balance; }
+  .door-line { max-width: 34ch; font-size: 1.0625rem; text-wrap: pretty; }
+  .door-btn { margin-top: 10px; min-width: 250px; }
+  .door-note { max-width: 30ch; }
+  .door-mark--enter .door-d { animation: b-door-d 520ms var(--ease) both; }
+  .door-mark--enter .door-m { animation: b-door-m 520ms var(--ease) both; }
+  .door-mark--enter .door-both { animation: b-fade 200ms 440ms both; }
+  .door--enter .door-body { animation: b-rise 320ms 520ms var(--ease) both; }
+  .outside { position: relative; }
+
+  /* ---------- filter sheet exit ---------- */
+  .fwrap--leaving .fpanel { animation: b-sheet-down 200ms ease-in both; }
+  .fwrap--leaving .fscrim { animation: b-fade-out 200ms ease-in both; }
+
+  /* ---------- nós: prototype switches, account ---------- */
+  .prefs { display: grid; gap: 14px; max-width: 560px; }
+  .pref .quiet { margin-left: 60px; font-size: 0.875rem; }
+  .us-exit .btn { margin-top: 10px; }
+  .style code { padding: 1px 6px; background: var(--table); border-radius: 6px; font-family: ui-monospace, 'Cascadia Mono', Menlo, monospace; font-size: 0.875em; }
+  .demo-row--links { margin-top: 16px; }
+
+  @media (min-width: 600px) {
+    .shelf > .shelf-item { flex-basis: 144px; }
+  }
+  @media (min-width: 768px) {
+    .sk-now .now-art { display: block; }
+    .sk-phone { display: none; }
+  }
+  @media (min-width: 900px) {
+    .shelf > .shelf-item { flex-basis: 150px; }
+    .fwrap--leaving .fpanel { animation-name: b-sheet-side-out; }
+    .offline { justify-content: center; }
+    .dead { padding-top: 72px; }
+    .door-mark { width: 220px; }
+    .demo-grid--two { grid-template-columns: 1fr 1fr; }
+  }
+}
+

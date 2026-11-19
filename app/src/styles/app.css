@@ -1,0 +1,18 @@
+/* Pieces the definitive site adds on top of the prototype's CSS. */
+
+/* The page colour also behind the document, so overscroll and the area under the safe insets match. */
+html { background: #efecf7; }
+html[data-b-theme='dark'] { background: #1a1326; color-scheme: dark; }
+
+.dir-b {
+  /* The brand mark in the header, in place of the prototype's face. */
+  .brand-mark { display: block; flex: none; }
+  .brand-mark .pg-line { stroke-width: 2; }
+
+  /* Avatar before sign-in: an empty seat, dashed like the empty circles of the mark. */
+  .mark--empty { background: var(--surface); border: 2px dashed var(--ink-2); }
+
+  /* The door: the wordmark under the mark. */
+  .door-mark .ov-line { stroke-width: 2.5; }
+  .empty .body { max-width: 46ch; }
+}

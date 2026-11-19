@@ -1,0 +1,490 @@
+@keyframes b-stroke {
+  from { clip-path: inset(-10% 100% -10% 0); }
+  to { clip-path: inset(-10% 0 -10% 0); }
+}
+
+/* Direction B — profile photos, game editing, library management, fuller diary and Nós, the strip draw, the marker. */
+.dir-b {
+  /* "Animações decorativas" off behaves like reduced motion. */
+  &.calm *, &.calm *::before, &.calm *::after {
+    animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important;
+  }
+
+  /* ---------- marca-texto: a highlighter stroke behind what belongs to both ---------- */
+  .marker {
+    --stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath fill='%23f2c14e' d='M6 14C2 14 0 20 1 27c1 8 7 11 15 10l172-6c8 0 12-4 11-11-1-7-5-10-12-10L60 12c-20 1-40 1-54 2Z'/%3E%3C/svg%3E");
+    --top: 26%; --bottom: -5%;
+    position: relative; z-index: 0; color: var(--ink); white-space: nowrap;
+    /* The stroke is its own layer, so drawing it never touches the text. */
+    &::before {
+      content: ''; position: absolute; z-index: -1; left: -0.3em; right: -0.3em; top: var(--top); bottom: var(--bottom);
+      background: var(--stroke) no-repeat center / 100% 100%;
+    }
+  }
+  :nth-child(2n) > .marker, .marker + .marker, .marker--b {
+    --stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath fill='%23f2c14e' d='M4 17c-3 1-4 7-2 13 2 6 8 7 16 6 52-3 112-1 167-4 9 0 14-5 14-12 0-9-6-13-15-12C120 10 70 14 4 17Z'/%3E%3C/svg%3E");
+    --top: 30%; --bottom: -8%;
+  }
+  :nth-child(3n) > .marker, .marker + .marker + .marker, .marker--c {
+    --stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath fill='%23f2c14e' d='M8 12c-5 1-7 6-7 13 0 8 5 13 14 12 65-1 105-6 175-6 7 0 10-5 9-11-1-6-4-10-10-10C130 9 60 13 8 12Z'/%3E%3C/svg%3E");
+    --top: 24%; --bottom: -3%;
+  }
+  .marker--wait::before { clip-path: inset(-10% 100% -10% 0); }
+  .marker--draw::before { animation: b-stroke 420ms cubic-bezier(0.2, 0.85, 0.3, 1) var(--delay, 0ms) both; }
+  .marker-big { font-family: var(--font-d); font-weight: 800; font-stretch: 78%; font-size: 2.25rem; line-height: 1.3; display: flex; flex-wrap: wrap; gap: 4px 28px; }
+  .facts dd .marker { display: inline-block; }
+  .facts dd:has(.marker) { margin-right: 8px; }
+
+  /* ---------- avatars with photo ---------- */
+  .mark--photo { position: relative; background: var(--surface); border: max(2px, calc(var(--s, 28px) * 0.075)) solid var(--who); }
+  .mark--photo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .mark-badge {
+    position: absolute; right: -16%; bottom: -12%; display: grid; place-items: center;
+    width: max(14px, 42%); height: max(14px, 42%);
+    background: var(--who); color: #fff; border: 1.5px solid var(--surface); border-radius: 50%;
+    font-family: var(--font-d); font-weight: 700; font-size: max(9px, calc(var(--s, 28px) * 0.24)); line-height: 1;
+  }
+  .hello { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .hello-me { display: inline-flex; border-radius: 50%; }
+  .chip--who { padding-left: 8px; }
+  .chip--new { border-style: dashed; }
+  .chip--quiet { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 3px; }
+  .iconbtn--small { width: 44px; height: 44px; border-width: 1.5px; }
+
+  /* ---------- small shared pieces ---------- */
+  .toast-host { position: fixed; left: 12px; right: 12px; bottom: calc(86px + env(safe-area-inset-bottom)); z-index: 70; display: flex; justify-content: center; pointer-events: none; }
+  .toast {
+    display: flex; align-items: center; gap: 4px; max-width: 540px; padding: 4px 4px 4px 16px; pointer-events: auto;
+    background: var(--ink); color: var(--surface); border-radius: 14px; font-weight: 500; animation: b-rise 220ms var(--ease) both;
+    > span { padding: 8px 8px 8px 0; }
+    :focus-visible { outline-color: var(--both); }
+  }
+  .toast-undo { min-height: 44px; padding: 0 12px; background: none; border: 0; color: var(--both); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .toast-x { display: grid; place-items: center; width: 44px; height: 44px; background: none; border: 0; color: var(--surface); }
+  .confirm-box { display: grid; gap: 10px; padding: 14px; background: var(--surface); border: 2px solid var(--ink); border-radius: 14px; }
+  .newtag { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .newtag input, .inline-add input, .saved-new input {
+    min-height: 48px; min-width: 0; padding: 10px 12px; background: var(--surface); border: 1.5px solid var(--ink-2); border-radius: 12px; font-size: 1rem;
+  }
+  .newtag input { width: 170px; border-radius: 999px; padding-inline: 16px; }
+  .inline-add { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; input { flex: 1 1 140px; width: 100%; } }
+  .coverpick-side { min-width: 0; }
+  .editor .inline-add input { background: var(--bg); }
+  .field-error { margin-top: 6px; font-weight: 600; font-size: 0.9375rem; &::before { content: '! '; font-family: var(--font-d); font-weight: 800; } }
+  .storelinks { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 12px; .btn { gap: 6px; } }
+  .linklist { display: grid; margin-top: 8px; li { display: flex; align-items: center; gap: 10px; min-height: 52px; border-top: 1px solid var(--line); } }
+  .linklist-host { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); font-size: 0.9375rem; }
+  .tag--store { background: var(--ink); color: var(--surface); }
+  .coverpick-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .coverpick-side { display: grid; gap: 8px; justify-items: start; .inline-add { width: 100%; } }
+  .steam-offer { display: grid; gap: 10px; justify-items: start; padding: 14px; background: var(--bg); border: 1.5px dashed var(--ink-2); border-radius: 14px; }
+  .editor-remove { margin-left: auto; }
+  .editor .field + .field, .editor .field-row + .field { margin-top: 4px; }
+  .editor .select select { background-color: var(--bg); }
+
+  /* ---------- profile ---------- */
+  .profile { max-width: 640px; }
+  .profile-head { display: flex; align-items: center; gap: 18px; margin: 18px 0 20px; .mark-badge { font-size: 1.125rem; } }
+  .profile-form { gap: 18px; }
+  .photo-edit { display: grid; justify-items: center; gap: 8px; margin: 6px 0 4px; .slider { max-width: 280px; } .editor-label { justify-self: center; } }
+  .photo-canvas { width: 240px; height: 240px; border: 5px solid var(--who); border-radius: 50%; background: var(--table); touch-action: none; cursor: grab; &:active { cursor: grabbing; } }
+  .profile-partner, .profile-other { margin-top: 24px; }
+  .member-link { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; font-weight: 600; }
+
+  /* ---------- game page additions ---------- */
+  .archived-note { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 18px; padding: 12px 14px; background: var(--surface); border: 2px dashed var(--ink-2); border-radius: 14px; }
+  .tags-new { margin-top: 10px; }
+  .manage-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+  .manage .confirm-box { margin-top: 10px; }
+
+  /* ---------- library management ---------- */
+  .saved-item { display: inline-flex; align-items: center; gap: 4px; }
+  .saved-new { display: grid; gap: 6px; margin: 4px 0 8px; }
+  .lib-status { flex-wrap: wrap; gap: 0 16px; }
+  .lib-select { white-space: nowrap; margin-left: auto; }
+  .lib-status .lib-select + .seg { margin-left: 0; }
+  .lib:has(.selectbar) { padding-bottom: 96px; }
+  .pick { position: relative; width: 100%; padding: 0; background: none; border: 0; text-align: left; }
+  .gcard.pick .pick-box { position: absolute; top: 10px; left: 10px; z-index: 1; }
+  .row.pick { grid-template-columns: 30px 48px minmax(0, 1fr); padding: 10px 0; }
+  .pick-box { display: grid; place-items: center; width: 30px; height: 30px; background: var(--surface); border: 2px solid var(--ink); border-radius: 9px; }
+  .pick[aria-checked='true'] .pick-box { background: var(--ink); color: var(--surface); }
+  .gcard.pick[aria-checked='true'] .cover { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .gcard.pick[aria-checked='false'] .cover { box-shadow: none; }
+  .selectbar {
+    position: fixed; left: 8px; right: 8px; bottom: calc(78px + env(safe-area-inset-bottom)); z-index: 40;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 10px 10px 16px;
+    background: var(--ink); color: var(--surface); border-radius: 16px; animation: b-rise 200ms var(--ease) both;
+    :focus-visible { outline-color: var(--both); }
+    .btn:disabled { opacity: 0.45; }
+  }
+  .selectbar select { color: var(--ink); }
+  .selectbar-count strong { font-family: var(--font-d); font-size: 1.25rem; }
+  .selectbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .select--bar select { height: 44px; padding: 0 30px 0 12px; border-radius: 12px; font-size: 1rem; background-position: right 8px center; max-width: 124px; }
+  .selectbar .iconbtn { background: transparent; color: var(--surface); border-color: var(--surface); }
+  .archived .rows { margin-top: 8px; }
+  .row--archived .row-go { min-height: 44px; }
+
+  /* ---------- diary ---------- */
+  .diary-add { margin-top: 4px; }
+  .diary > .editor { margin-top: 4px; }
+  .zeramos { margin-top: 28px; }
+  .zeramos-list { padding-top: 10px; gap: 14px; }
+  .zeramos-item { position: relative; display: grid; gap: 6px; width: 104px; text-decoration: none; }
+  .zeramos-stamps { position: absolute; top: -8px; right: -8px; display: flex; .stamp { background: var(--surface); } .stamp + .stamp { margin-left: -8px; } .stamp::after { display: none; } }
+  .zeramos-title { font-size: 0.875rem; font-weight: 600; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .note-edit { min-height: 44px; margin: -8px 0 6px 66px; font-size: 0.9375rem; }
+  .diary-item--edit { display: block; padding: 14px 0; }
+  .diary-item--both { display: block; margin: 8px 0; padding: 0 12px; background: var(--both); border: 2px solid var(--ink); border-radius: var(--r-card); .stamp { background: var(--surface); } .note-meta { color: var(--ink); flex-wrap: wrap; } }
+  .diary-item--both + .diary-item, .diary-item + .diary-item--both { border-top: 0; }
+
+  /* ---------- nós ---------- */
+  .members > li { display: grid; }
+  a.member { text-decoration: none; box-shadow: var(--shadow); border-color: var(--ink); }
+  a.member[data-me] { background: var(--who-soft); }
+  .months { display: grid; gap: 16px; max-width: 760px; margin-top: 4px; }
+  .months li { display: grid; gap: 5px; }
+  .months-label { font-weight: 600; }
+  .months-track { display: flex; gap: 2px; height: 20px; }
+  .months-bar { min-width: 8px; border: 2px solid var(--ink); border-radius: 4px; }
+  .months-bar--both { background: var(--both); }
+  .months-bar--solo { background: var(--surface); }
+  .months-value { font-size: 0.9375rem; }
+  .months-key { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+  .months-swatch { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 4px; &:not(:first-child) { margin-left: 14px; } }
+  .row--rank { grid-template-columns: 26px 48px minmax(0, 1fr) auto; }
+  .rank { font-family: var(--font-d); font-weight: 800; font-stretch: 78%; font-size: 1.5rem; text-align: center; font-variant-numeric: tabular-nums; }
+  .genres li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line-strong); }
+  .genres a { font-weight: 600; grid-column: 1; display: inline-flex; align-items: center; min-height: 28px; }
+  .genres .quiet { grid-column: 1; font-size: 0.875rem; }
+  .genres-score { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-d); font-weight: 800; font-stretch: 80%; font-size: 1.75rem; padding-right: 6px; }
+  .genres + .quiet { margin-top: 8px; font-size: 0.875rem; }
+  .linkbox { display: grid; gap: 10px; justify-items: start; padding: 16px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card); }
+  .install-lede { max-width: 52ch; }
+  .install { display: grid; gap: 12px; margin-top: 12px; max-width: 760px; dt { font-weight: 700; } dd { margin: 2px 0 0; } div { padding: 12px 14px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: 14px; } }
+
+  /* ---------- draw: the strip ---------- */
+  .draw-stage:has(.strip-stage) { padding-inline: 0; }
+  .strip-stage { position: relative; justify-self: stretch; width: 100%; height: calc(var(--card) * 1.5 + 24px); }
+  .strip { position: absolute; top: 12px; left: 0; display: flex; gap: 14px; will-change: transform; }
+  .strip-card { position: relative; flex: 0 0 var(--card); transition: opacity 220ms ease-out, transform 260ms var(--ease); }
+  .strip-stage--landed .strip-card:not(.strip-card--win) { opacity: 0; }
+  .strip-stage--landed .strip-card--win { transform: rotate(-1.5deg) scale(1.04); .cover { box-shadow: 5px 5px 0 var(--ink); } }
+  .strip-marks { position: absolute; top: -14px; right: -14px; display: flex; .stamp { background: var(--surface); } .stamp + .stamp { margin-left: -10px; } }
+  .draw-main { display: grid; gap: 14px; min-width: 0; }
+  .draw-under { display: grid; gap: 12px; align-content: start; min-height: 150px; }
+  .draw-result { text-align: center; }
+  .draw-title { font-family: var(--font-d); font-weight: 750; font-stretch: 85%; font-size: 1.75rem; line-height: 1.05; text-wrap: balance; }
+  .draw-result--rise { animation: b-rise 300ms var(--ease) both; }
+  .draw-actions--rise { animation: b-rise 300ms 120ms var(--ease) both; }
+  .motion-stage--draw { padding-inline: 0; min-height: 300px; }
+
+  @media (min-width: 700px) {
+    .months li { grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 4px 14px; }
+    .months-value { grid-column: 2; }
+    .install { grid-template-columns: 1fr 1fr; }
+    .coverpick-row { grid-template-columns: 128px minmax(0, 1fr); gap: 20px; }
+  }
+  @media (min-width: 900px) {
+    .toast-host { bottom: 24px; }
+    .selectbar { left: 50%; right: auto; bottom: 24px; width: min(720px, calc(100vw - 80px)); margin-left: calc(min(720px, 100vw - 80px) / -2); flex-wrap: nowrap; }
+    .select--bar select { max-width: none; }
+    .profile-head { margin: 28px 0; }
+    .draw-under { min-height: 170px; }
+  }
+}
+
+/* ---------- shelf: side arrows and pointer feedback ---------- */
+.dir-b {
+  .shelf-wrap { position: relative; }
+  .shelf { scrollbar-width: none; }
+  .shelf::-webkit-scrollbar { display: none; }
+  /* Arrows are for pointers; on touch the list is swiped. */
+  .shelf-arrow { display: none; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shelf-arrow {
+      position: absolute; top: 38%; z-index: 2; display: grid; place-items: center;
+      width: 48px; height: 48px; translate: 0 -50%;
+      background: var(--both); color: var(--ink); border: 2px solid var(--ink); border-radius: 50%;
+      box-shadow: var(--shadow); transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+    }
+    .shelf-arrow[hidden] { display: none; }
+    .shelf-arrow--prev { left: -14px; }
+    .shelf-arrow--next { right: -14px; }
+    .shelf-arrow:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+    .shelf-arrow:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+
+    /* The card under the cursor straightens up and lifts off the shelf. */
+    .shelf .gcard .cover { transition: rotate 180ms var(--ease), translate 180ms var(--ease), box-shadow 180ms var(--ease); }
+    .shelf .gcard:hover .cover, .shelf .gcard:focus-visible .cover { rotate: 0deg; translate: -2px -6px; box-shadow: 6px 8px 0 var(--ink); }
+    .shelf .gcard:active .cover { translate: 1px 1px; box-shadow: 2px 2px 0 var(--ink); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shelf-arrow, .shelf .gcard .cover { transition: none; }
+  }
+}
+
+/* Dragging the shelf with the mouse: free scrolling while held, snapping again on release. */
+.dir-b {
+  @media (hover: hover) and (pointer: fine) {
+    .shelf { cursor: grab; }
+    .shelf.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+    .shelf.is-dragging .gcard { pointer-events: none; }
+  }
+}
+
+/* Library grid: the same lift under the cursor as on the shelf. Not in selection mode, where a click ticks the card. */
+.dir-b {
+  @media (hover: hover) and (pointer: fine) {
+    .grid .gcard:not(.pick) .cover { transition: translate 180ms var(--ease), transform 120ms var(--ease), box-shadow 180ms var(--ease); }
+    .grid .gcard:not(.pick):hover .cover, .grid .gcard:not(.pick):focus-visible .cover { translate: -2px -6px; box-shadow: 6px 8px 0 var(--ink); }
+    .grid .gcard:not(.pick):active .cover { translate: 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grid .gcard .cover { transition: none; }
+  }
+}
+
+/* ---------- pointer feedback: one language for "this can be clicked" ----------
+   Pressable things lift off the page with a harder shadow; text links get a marker underline.
+   Pointer devices only: touch keeps the pressed (:active) feedback it already had. */
+.dir-b {
+  a, button, summary, select, label:has(input), [role='button'], [role='tab'], [role='switch'] { cursor: pointer; }
+  :disabled, [aria-disabled='true'] { cursor: not-allowed; }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* buttons and pressable cards */
+    .btn:hover:not(:disabled), .press:hover { transform: translate(-1px, -2px); box-shadow: 4px 5px 0 var(--ink); }
+    .btn--ink:hover:not(:disabled) { box-shadow: 4px 5px 0 var(--line-strong); }
+    .btn:active:not(:disabled), .press:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+    .btn--ink:active:not(:disabled) { box-shadow: 1px 1px 0 var(--line-strong); }
+
+    /* chips, round icon buttons */
+    button.chip, a.chip, label.chip, .iconbtn { transition: translate 120ms var(--ease), box-shadow 120ms var(--ease), background-color 120ms var(--ease); }
+    button.chip:hover, a.chip:hover, label.chip:hover, .iconbtn:hover { translate: -1px -2px; box-shadow: 2px 3px 0 var(--ink); }
+    button.chip:not(.chip--on):hover, a.chip:not(.chip--on):hover, label.chip:not(.chip--on):hover { background: var(--both-soft); border-color: var(--ink); }
+    button.chip:active, a.chip:active, label.chip:active, .iconbtn:active { translate: 1px 1px; box-shadow: none; }
+    .chip--quiet:hover { background: transparent; box-shadow: none; translate: none; }
+
+    /* text links: a mustard marker underline */
+    .link:hover, .sec-link:hover, .member-link:hover, .row-go:hover, .chip--quiet:hover,
+    .note-title a:hover, .us-foot a:hover, .foot-links a:hover, .back:hover, .crumb:hover {
+      text-decoration-line: underline; text-decoration-color: var(--both); text-decoration-thickness: 5px; text-underline-offset: 1px; text-decoration-skip-ink: none;
+    }
+
+    /* list rows that lead somewhere */
+    a.row, button.row { transition: background-color 120ms var(--ease); border-radius: 12px; }
+    a.row:hover, button.row:hover { background: var(--surface); box-shadow: 0 0 0 8px var(--surface); }
+    a.row:hover .row-title, button.row:hover .row-title { text-decoration: underline; text-decoration-color: var(--both); text-decoration-thickness: 5px; text-underline-offset: 1px; text-decoration-skip-ink: none; }
+
+    /* the brand, the avatar, fields */
+    .brand-mark { transition: rotate 160ms var(--ease), scale 160ms var(--ease); }
+    .brand:hover .brand-mark { rotate: -8deg; scale: 1.1; }
+    .top-me { transition: scale 140ms var(--ease); }
+    .top-me:hover, .hello-me:hover { scale: 1.07; }
+    input:not([type='range'], [type='checkbox'], [type='radio']):hover, textarea:hover, select:hover { border-color: var(--ink); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button.chip, a.chip, label.chip, .iconbtn, a.row, button.row, .brand-mark, .top-me { transition: none; }
+  }
+}
+
+/* ================= dark theme =================
+   Same identity, night version: deep aubergine page, light ink. Everything is tokens, so the theme is
+   a second set of values. Mustard areas keep dark ink, because light text on mustard is unreadable. */
+html[data-b-theme='dark'] .dir-b {
+  --bg: #1a1326;
+  --surface: #261c37;
+  --ink: #f2edfb;
+  --ink-2: #b6abd0;
+  --danilo: #238e99;
+  --maellen: #d9487f;
+  --both: #f2c14e;
+  --line: #3a2e52;
+  --line-strong: #63557f;
+  --table: #2f2444;
+  --both-soft: #453718;
+  --danilo-soft: #16383d;
+  --maellen-soft: #481d32;
+  --on-both: #241a35;
+  color-scheme: dark;
+
+  /* Inside anything painted mustard, ink goes back to dark: text, outlines and shadows follow. */
+  .btn--both, .draw-entry, .tab-plus, .want-state--both, .stampcard--both, .joint-avg, .drawcard-both, .draw-done,
+  .facts-both dd, .diary-item--both, .shelf-arrow, .row-score, .tag[data-owner='both'], .tag--ours,
+  li[data-done] .steps-n, .months-bar--both, .banner {
+    --ink: var(--on-both); --ink-2: #4c4163; --surface: #fcfbff; --line-strong: #8f84aa; color: var(--ink);
+    --danilo-ink: #17666e; --maellen-ink: #bf3468;
+  }
+  /* On the dark page the number stays light and the highlighter is struck under it, like underlining with the pen:
+     the text is readable before, during and after the stroke is drawn. */
+  .marker.marker { --top: 66% !important; --bottom: -30% !important; color: var(--ink); }
+  ::selection { color: var(--on-both); }
+
+  /* Hard shadows read as a drop below the element, so on the dark page they are darker than it. */
+  --shadow: 3px 3px 0 #0b0712;
+  --drop: #0b0712;
+  .sk { background: rgb(255 255 255 / 0.04); }
+  .fscrim { background: rgb(8 5 14 / 0.62); }
+  .cover img { background: var(--table); }
+
+  /* Every other hard shadow written as "N N 0 var(--ink)" would turn into a light slab here: drop it below instead. */
+  .backbtn { box-shadow: 2px 2px 0 var(--drop); }
+  .drawcard, .strip-stage--landed .strip-card--win .cover, .pack-stage--done .pack-card--win .cover { box-shadow: 5px 5px 0 var(--drop); }
+  .pack-body { box-shadow: 4px 4px 0 var(--drop); }
+  .wall-opt--on .wall-swatch { box-shadow: 3px 3px 0 var(--drop); }
+  .slider::-webkit-slider-thumb { box-shadow: 2px 2px 0 var(--drop); }
+  .btn:active:not(:disabled), .press:active, .gcard:active .cover, .diverge-item:active, .savebtn:disabled { box-shadow: 1px 1px 0 var(--drop); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover:not(:disabled), .press:hover { box-shadow: 4px 5px 0 var(--drop); }
+    .btn:active:not(:disabled), .press:active { box-shadow: 1px 1px 0 var(--drop); }
+    button.chip:hover, a.chip:hover, label.chip:hover, .iconbtn:hover { box-shadow: 2px 3px 0 var(--drop); }
+    .shelf .gcard:hover .cover, .shelf .gcard:focus-visible .cover,
+    .grid .gcard:not(.pick):hover .cover, .grid .gcard:not(.pick):focus-visible .cover { box-shadow: 6px 8px 0 var(--drop); }
+    .shelf .gcard:active .cover { box-shadow: 2px 2px 0 var(--drop); }
+    .wall-opt:hover .wall-swatch { box-shadow: 3px 4px 0 var(--drop); }
+  }
+
+  /* Person colours: the fills are a shade deeper so the white initials on them keep 4.5:1; where the colour is
+     the ink itself (stamps, the big rating number) a lighter shade reads on the dark page. On mustard areas the
+     light theme's shades come back, because there the stamp sits on white. */
+  --danilo: #1d7c86;
+  --maellen: #c23a6e;
+  --danilo-ink: #5cc3cc;
+  --maellen-ink: #f27fab;
+  .stamp[data-person='danilo'] { --who: var(--danilo-ink); }
+  .stamp[data-person='maellen'] { --who: var(--maellen-ink); }
+  [data-person='danilo'] .editor-value { color: var(--danilo-ink); }
+  [data-person='maellen'] .editor-value { color: var(--maellen-ink); }
+  /* An empty stamp slot: the letter still has to be read. */
+  .stamp-empty { color: var(--ink-2); }
+
+  /* Native select arrow, redrawn in light ink. */
+  .select select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23f2edfb' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  }
+
+  /* Switch: "on" is the mustard track with a dark knob, so on and off differ by more than the knob's place. */
+  .switch input:checked + .switch-ui { background: var(--both); border-color: var(--both); }
+  .switch input:checked + .switch-ui::after { background: var(--on-both); }
+
+  /* Light bars on the dark page (toast, selection bar): their accents and focus rings go dark. */
+  .toast-undo { color: var(--bg); }
+  .toast :focus-visible, .selectbar :focus-visible { outline-color: var(--bg); }
+
+  /* Offline: a light bar here would glare; a raised dark band with the mustard edge says the same. */
+  .offline { background: var(--table); color: var(--ink); border-bottom: 2px solid var(--both); }
+}
+html[data-b-theme='dark']:has(.dir-b) { background: #1a1326; color-scheme: dark; }
+
+.dir-b {
+  .theme-toggle { width: 44px; height: 44px; border-width: 1.5px; }
+}
+
+/* ---------- wallpaper: the viewer's chosen drawing behind the pages ---------- */
+.dir-b { background-image: var(--b-wall, none); background-size: var(--b-wall-size, auto); }
+.dir-b {
+  .wall { display: grid; gap: 12px; margin-top: 32px; padding: 18px; background: var(--surface); border: 2px solid var(--ink); border-radius: var(--r-card); }
+  .wall-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 12px 10px; }
+  .wall-opt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; min-width: 0; }
+  .wall-swatch {
+    display: block; aspect-ratio: 4 / 3; background-color: var(--bg); background-position: center;
+    border: 2px solid var(--line-strong); border-radius: 12px;
+    transition: translate 120ms var(--ease), box-shadow 120ms var(--ease);
+  }
+  .wall-name { font-size: 0.875rem; font-weight: 500; line-height: 1.25; }
+  .wall-opt--on .wall-swatch { border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+  .wall-opt--on .wall-name { font-weight: 700; }
+  .wall-opt:has(:focus-visible) .wall-swatch { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .wall-opt:active .wall-swatch { translate: 1px 1px; }
+  .wall-levels { margin: 4px 0 0; padding: 0; border: 0; min-width: 0; }
+  .wall-levels:disabled { opacity: 0.45; }
+  .wall-seg { display: inline-flex; margin-top: 6px; border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; }
+  .wall-seg label + label { border-left: 2px solid var(--ink); }
+  .wall-seg span { display: grid; place-items: center; min-width: 84px; min-height: 44px; padding: 0 14px; font-weight: 600; }
+  .wall-seg input:checked + span { background: var(--ink); color: var(--surface); }
+  .wall-seg label:has(:focus-visible) span { outline: 3px solid var(--ink); outline-offset: -5px; }
+  @media (hover: hover) and (pointer: fine) {
+    .wall-opt:hover .wall-swatch { translate: -1px -2px; box-shadow: 3px 4px 0 var(--ink); }
+    .wall-seg input:not(:checked) + span:hover { background: var(--both-soft); }
+  }
+  @media (prefers-reduced-motion: reduce) { .wall-swatch { transition: none; } }
+}
+
+/* ---------- draw as a sealed pack ---------- */
+.dir-b {
+  .draw-stage:has(.pack-stage) { padding-inline: 0; overflow: hidden; }
+  .draw-mode { margin: 0; padding: 0; border: 0; }
+  .draw-skip-row { text-align: center; }
+  .pack-stage {
+    --card: 148px;
+    position: relative; justify-self: stretch; width: 100%; height: calc(var(--card) * 1.5 + 96px);
+    display: grid; place-items: center;
+  }
+  .pack-cards, .pack { grid-area: 1 / 1; }
+  .pack-cards { position: relative; width: var(--card); aspect-ratio: 2 / 3; }
+  .pack-stage--ready .pack-cards { visibility: hidden; }
+  .pack-card { position: absolute; inset: 0; }
+  .pack-card--win { perspective: 900px; z-index: 1; }
+  .pack-stage--done .pack-card--win { rotate: -1.5deg; scale: 1.04; }
+  .pack-stage--done .pack-card--win .cover { box-shadow: 5px 5px 0 var(--ink); }
+  .pack-flip { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; }
+  .pack-face { position: absolute; inset: 0; display: block; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .pack-face--back { transform: rotateY(180deg); }
+  .pack-face .cover { height: 100%; margin: 0; }
+  .pack-back {
+    display: grid; place-items: center; width: 100%; height: 100%;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: 14px;
+    background-image: radial-gradient(var(--line) 1.6px, transparent 1.7px); background-size: 14px 14px;
+  }
+
+  .pack { position: relative; z-index: 2; width: calc(var(--card) + 28px); height: calc(var(--card) * 1.5 + 40px); display: grid; grid-template-rows: 34px 0 minmax(0, 1fr); }
+  .pack-top, .pack-body { border: 2px solid var(--on-pack-line, #241a35); color: #241a35; padding: 0; font: inherit; }
+  .pack-top {
+    position: relative; z-index: 1; background: #dda21a; border-bottom: 0; border-radius: 12px 12px 0 0;
+    transform-origin: 100% 100%; touch-action: none; cursor: grab;
+    /* the crimped edge of a sealed pack */
+    background-image: repeating-linear-gradient(90deg, transparent 0 7px, rgb(36 26 53 / 0.22) 7px 9px);
+  }
+  .pack-top:active { cursor: grabbing; }
+  .pack-notch { position: absolute; left: -2px; bottom: -7px; width: 0; height: 0; border: 7px solid transparent; border-left-color: #241a35; }
+  .pack-tear { position: relative; z-index: 2; height: 0; border-top: 2px dashed #241a35; margin-inline: 2px; }
+  .pack-tear span { position: absolute; left: 0; top: -3px; height: 4px; background: #241a35; border-radius: 2px; }
+  .pack-body {
+    display: grid; align-content: center; justify-items: center; gap: 6px; background: #f2c14e; border-top: 0; border-radius: 0 0 14px 14px;
+    box-shadow: 4px 4px 0 var(--ink); text-align: center; cursor: pointer;
+  }
+  .pack-face-mark { width: 62%; }
+  .pack-face-mark svg { display: block; width: 100%; height: auto; }
+  .pack-name { font-family: var(--font-d); font-weight: 800; font-stretch: 80%; font-size: 1.5rem; line-height: 1; }
+  .pack-sub { font-size: 0.875rem; font-weight: 600; }
+  .pack-hint { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; color: var(--ink-2); font-size: 0.875rem; }
+  .pack-top:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+
+  @media (min-width: 560px) { .pack-stage { --card: 190px; } }
+}
+
+/* ---------- navigation: the active pill slides between tabs ---------- */
+.dir-b {
+  .nav-ind { position: absolute; inset: 0; z-index: 0; border-radius: 999px; background: var(--ink); }
+  .nav-label { position: relative; z-index: 1; display: inline-grid; place-items: center; }
+  .top-nav a { position: relative; }
+  .top-nav a.active { background: transparent; color: var(--surface); }
+  .tab-ico { position: relative; }
+  .tab.active .tab-ico { background: transparent; color: var(--surface); }
+}
+
+/* ---------- style page: demos of the newer pieces ---------- */
+.dir-b {
+  .pill-demo { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px; background: var(--surface); border: 2px solid var(--ink); border-radius: 999px; }
+  .pill-demo-tab {
+    position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+    background: none; border: 0; border-radius: 999px; color: var(--ink); font: inherit; font-weight: 600;
+    &.active { color: var(--surface); }
+  }
+  .wall-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+}
