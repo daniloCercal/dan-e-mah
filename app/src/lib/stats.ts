@@ -1,9 +1,10 @@
 import type { GameSummary } from '@/lib/data/games'
 import type { Tag } from '@/lib/filters'
 import { isMatch, jointAverage, ratingGap } from '@/lib/people'
+import { sessionMonths, togetherMinutes, type Session } from '@/lib/sessions'
 
 /** Computed from the games on screen, never stored; the average exists only for games both have rated. */
-export function clubStats(all: GameSummary[], tags: Tag[]) {
+export function clubStats(all: GameSummary[], tags: Tag[], sessions: Session[] = []) {
   const games = all.filter((g) => !g.archived)
   const both = games.filter((g) => jointAverage(g) !== null)
   const byJoint = [...both].sort((a, b) => (jointAverage(b) ?? 0) - (jointAverage(a) ?? 0))
@@ -35,5 +36,8 @@ export function clubStats(all: GameSummary[], tags: Tag[]) {
     mostDivisive: [...both].filter((g) => (ratingGap(g) ?? 0) > 0).sort((a, b) => (ratingGap(b) ?? 0) - (ratingGap(a) ?? 0)).slice(0, 3),
     top: byJoint.slice(0, 10),
     genres,
+    sessions: sessions.length,
+    togetherMinutes: togetherMinutes(sessions),
+    months: sessionMonths(sessions),
   }
 }

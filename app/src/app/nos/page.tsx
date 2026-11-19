@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { listGames } from '@/lib/data/games'
+import { listSessions } from '@/lib/data/sessions'
 import { listTags } from '@/lib/data/tags'
+import { formatMinutes } from '@/lib/sessions'
 import { getViewer } from '@/lib/data/viewer'
 import { clubStats } from '@/lib/stats'
 import { formatRating, gapLine, jointAverage, ratingGap } from '@/lib/people'
@@ -19,9 +21,11 @@ import { NosPrefs } from './NosPrefs'
 export const metadata: Metadata = { title: 'Nós' }
 
 export default async function Us() {
-  const [viewer, games, tags] = await Promise.all([getViewer(), listGames(), listTags()])
+  const [viewer, games, tags, sessions] = await Promise.all([getViewer(), listGames(), listTags(), listSessions()])
   if (!viewer) return null
-  const stats = clubStats(games, tags)
+  const stats = clubStats(games, tags, sessions)
+  const months = stats.months.slice(-12)
+  const longest = Math.max(1, ...months.map((m) => m.together + m.solo))
   const matches = games.filter((g) => !g.archived && isMatch(g))
   const people = [viewer.me, viewer.partner].filter((m) => m !== null)
   const names = { danilo: 'Danilo', maellen: 'Maellen', ...Object.fromEntries(people.map((m) => [m.person, m.name])) }
@@ -75,6 +79,7 @@ export default async function Us() {
           <div><dt>zerados pela dupla</dt><dd>{stats.finished}</dd></div>
           <div><dt>em andamento</dt><dd>{stats.playing}</dd></div>
           <div><dt>que nós dois queremos</dt><dd>{stats.matches}</dd></div>
+          <div><dt>jogando juntos</dt><dd>{stats.togetherMinutes ? formatMinutes(stats.togetherMinutes) : '–'}</dd></div>
           <div><dt>nota média de nós dois</dt><dd>{stats.average === null ? '–' : <Marker>{formatRating(stats.average)}</Marker>}</dd></div>
         </dl>
         <p className="quiet">A média só conta jogos que os dois avaliaram. Tudo aqui é calculado do que vocês registraram.</p>
@@ -96,6 +101,36 @@ export default async function Us() {
           </Shelf>
         ) : (
           <p className="quiet">Ainda não tem jogo que os dois marcaram. Marque “quero jogar” em algum e espere a outra metade.</p>
+        )}
+      </section>
+
+      <section className="sec" aria-labelledby="h-meses">
+        <h2 className="h2" id="h-meses">Quanto jogamos por mês</h2>
+        {months.length ? (
+          <>
+            {/* One measure (time played), one axis; every bar carries its value as text. */}
+            <ul className="months">
+              {months.map((m) => (
+                <li key={m.key}>
+                  <span className="months-label">{m.label.replace(' de ', ' ')}</span>
+                  <span className="months-track" aria-hidden="true">
+                    {m.together > 0 && <span className="months-bar months-bar--both" style={{ width: `${(m.together / longest) * 100}%` }} />}
+                    {m.solo > 0 && <span className="months-bar months-bar--solo" style={{ width: `${(m.solo / longest) * 100}%` }} />}
+                  </span>
+                  <span className="months-value">
+                    <strong>{formatMinutes(m.together)}</strong> juntos{m.solo > 0 && `, mais ${formatMinutes(m.solo)} de alguém sozinho`}
+                    <span className="quiet"> em {m.count} {m.count === 1 ? 'sessão' : 'sessões'}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="months-key quiet">
+              <span className="months-swatch months-bar--both" aria-hidden="true" /> juntos
+              <span className="months-swatch months-bar--solo" aria-hidden="true" /> sozinho
+            </p>
+          </>
+        ) : (
+          <p className="quiet">Ainda não há sessões registradas. <Link href="/diario">Registrar a primeira no diário.</Link></p>
         )}
       </section>
 

@@ -4,6 +4,8 @@ import { GameCard } from '@/components/Marks'
 import { PairGlyph } from '@/components/icons'
 import { Shelf } from '@/components/Shelf'
 import { listGames } from '@/lib/data/games'
+import { listSessions } from '@/lib/data/sessions'
+import { SessionNote } from '@/components/SessionNote'
 import { isMatch } from '@/lib/people'
 import { getViewer } from '@/lib/data/viewer'
 
@@ -18,7 +20,7 @@ function pickOne(list: string[]): string {
 }
 
 export default async function Home() {
-  const [viewer, all] = await Promise.all([getViewer(), listGames()])
+  const [viewer, all, sessions] = await Promise.all([getViewer(), listGames(), listSessions()])
   const games = all.filter((g) => !g.archived)
   const me = viewer?.me
   const name = me && (me.useNicknames && me.nicknames.length ? pickOne(me.nicknames) : me.name)
@@ -46,6 +48,8 @@ export default async function Home() {
   const current = games.find((g) => g.shared === 'jogando')
   const matches = games.filter(isMatch)
   const recent = games.slice(0, 8)
+  const titles = new Map(all.map((g) => [g.id, g.title]))
+  const lastSessions = sessions.slice(0, 3)
 
   return (
     <div className="page home">
@@ -102,6 +106,20 @@ export default async function Home() {
             <li key={g.id}><GameCard game={g} tilt={i % 2 ? 'b' : 'a'} /></li>
           ))}
         </Shelf>
+      </section>
+
+      <section className="sec" aria-labelledby="h-sessoes">
+        <div className="sec-head">
+          <h2 className="h2" id="h-sessoes">Últimas sessões</h2>
+          <Link className="sec-link" href="/diario">Abrir o diário</Link>
+        </div>
+        {lastSessions.length ? (
+          <div className="notes">
+            {lastSessions.map((s) => <SessionNote key={s.id} session={s} title={titles.get(s.gameId) ?? 'Jogo removido'} />)}
+          </div>
+        ) : (
+          <p className="quiet">Depois de jogar, registrem a sessão no diário: quanto tempo durou e o que aconteceu de bom.</p>
+        )}
       </section>
     </div>
   )

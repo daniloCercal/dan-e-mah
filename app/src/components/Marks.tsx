@@ -76,3 +76,12 @@ export function GameCard({ game, tilt, eager }: { game: GameSummary; tilt?: 'a' 
     </Link>
   )
 }
+
+/** Who took part: one mark, or both overlapping. */
+export function WhoMarks({ who, size = 28 }: { who: Person[]; size?: number }) {
+  return (
+    <span className={who.length === 2 ? 'who who--both' : 'who'}>
+      {(['danilo', 'maellen'] as const).filter((p) => who.includes(p)).map((p) => <Mark key={p} person={p} size={size} />)}
+    </span>
+  )
+}

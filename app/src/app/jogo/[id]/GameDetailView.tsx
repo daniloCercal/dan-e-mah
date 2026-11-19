@@ -10,7 +10,11 @@ import { Confirm, CoverPicker, LinksEditor, NewTag, StoreLinks, type PickedCover
 import { setGameTag } from '@/app/actions/library'
 import type { Tag } from '@/lib/filters'
 import { Cover } from '@/components/Cover'
-import { IconBack, IconCheck, PairGlyph } from '@/components/icons'
+import Link from 'next/link'
+import { IconBack, IconCheck, IconPlus, PairGlyph } from '@/components/icons'
+import { SessionForm } from '@/components/SessionForm'
+import { SessionNote } from '@/components/SessionNote'
+import { monthLabel, type Session } from '@/lib/sessions'
 import { Marker } from '@/components/Marker'
 import { Mark, Stamp } from '@/components/Marks'
 import { useNameOf } from '@/lib/member'
@@ -172,7 +176,7 @@ function OurTags({ game, ours }: { game: GameDetail; ours: Tag[] }) {
   )
 }
 
-export function GameDetailView({ game, me, ourTags, reviews }: { game: GameDetail; me: Person; ourTags: Tag[]; reviews: GameReviews }) {
+export function GameDetailView({ game, me, ourTags, reviews, sessions }: { game: GameDetail; me: Person; ourTags: Tag[]; reviews: GameReviews; sessions: Session[] }) {
   const defaultName = useNameOf()
   const router = useRouter()
   const pathname = usePathname()
@@ -186,6 +190,7 @@ export function GameDetailView({ game, me, ourTags, reviews }: { game: GameDetai
   const [draft, setDraft] = useState<{ shared?: Status; mine?: Status; wants?: boolean } | null>(null)
   const editing = params.get('editar') === '1'
   const [rating, setRating] = useState(() => params.get('avaliar') === '1')
+  const [logging, setLogging] = useState(() => params.get('sessao') === '1')
   const toast = useToast()
 
   const setEditing = (on: boolean) => router.replace(on ? `${pathname}?editar=1` : pathname, { scroll: false })
@@ -268,14 +273,36 @@ export function GameDetailView({ game, me, ourTags, reviews }: { game: GameDetai
           </section>
 
           <div className="actions">
+            <button type="button" className="btn btn--plain" aria-expanded={logging} onClick={() => setLogging(!logging)}>
+              <IconPlus size={20} />
+              Registrar sessão
+            </button>
             <button type="button" className="btn btn--ink" aria-expanded={rating} onClick={() => setRating(!rating)}>
               {reviews[me] ? 'Mudar minha nota' : 'Avaliar'}
             </button>
           </div>
 
+          {logging && <SessionForm game={{ id: game.id, title: game.title }} onDone={() => setLogging(false)} />}
           {editing && <EditGame game={game} onDone={() => setEditing(false)} />}
 
           <RatingBlock gameId={game.id} me={me} reviews={reviews} editing={rating} setEditing={setRating} />
+
+          <section className="sec o-sessions" aria-labelledby="h-sessoes">
+            <h2 className="h2" id="h-sessoes">Sessões deste jogo</h2>
+            {sessions.length ? (
+              <div className="notes">
+                {sessions.map((s) => (
+                  <div key={s.id} className="note-wrap">
+                    <p className="note-month">{monthLabel(s.date)}</p>
+                    <SessionNote session={s} showGame={false} />
+                  </div>
+                ))}
+                <p className="quiet"><Link href="/diario">Editar sessões no diário</Link></p>
+              </div>
+            ) : (
+              <p className="quiet">Nenhuma sessão registrada ainda.</p>
+            )}
+          </section>
         </div>
 
         <aside className="detail-side">
