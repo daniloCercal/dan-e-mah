@@ -16,9 +16,11 @@ export function Mark({ person, size = 28, named = true }: { person: Person; size
 }
 
 /** Rubber-stamp version of the mark, used when a person finishes a game. */
-export function Stamp({ person, press = false, size = 52 }: { person: Person; press?: boolean; size?: number }) {
+export function Stamp({ person, press = false, delay = 0, size = 52 }: { person: Person; press?: boolean; delay?: number; size?: number }) {
   return (
-    <span className={press ? 'stamp stamp--press' : 'stamp'} data-person={person} style={{ ['--s' as string]: `${size}px` }}>
+    <span className={press ? 'stamp stamp--press' : 'stamp'} data-person={person}
+      style={{ ['--s' as string]: `${size}px`, animationDelay: delay ? `${delay}ms` : undefined }}
+    >
       <span aria-hidden="true">{initialOf(person)}</span>
       <span className="sr-only">Carimbo de {defaultName(person)}</span>
     </span>

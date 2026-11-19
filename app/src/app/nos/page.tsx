@@ -7,6 +7,9 @@ import { clubStats } from '@/lib/stats'
 import { formatRating, gapLine, jointAverage, ratingGap } from '@/lib/people'
 import { EmptyPage } from '@/components/States'
 import { Cover } from '@/components/Cover'
+import { GameCard } from '@/components/Marks'
+import { Shelf } from '@/components/Shelf'
+import { isMatch } from '@/lib/people'
 import { Mark, defaultName } from '@/components/Marks'
 import { Marker } from '@/components/Marker'
 import { RatingLine } from '@/components/Overlap'
@@ -19,6 +22,7 @@ export default async function Us() {
   const [viewer, games, tags] = await Promise.all([getViewer(), listGames(), listTags()])
   if (!viewer) return null
   const stats = clubStats(games, tags)
+  const matches = games.filter((g) => !g.archived && isMatch(g))
   const people = [viewer.me, viewer.partner].filter((m) => m !== null)
 
   if (stats.total === 0) {
@@ -73,6 +77,25 @@ export default async function Us() {
           <div><dt>nota média de nós dois</dt><dd>{stats.average === null ? '–' : <Marker>{formatRating(stats.average)}</Marker>}</dd></div>
         </dl>
         <p className="quiet">A média só conta jogos que os dois avaliaram. Tudo aqui é calculado do que vocês registraram.</p>
+      </section>
+
+      <section className="sec" aria-labelledby="h-match">
+        <div className="sec-head">
+          <h2 className="h2" id="h-match">
+            <PairGlyph size={18} />
+            Nós dois queremos jogar
+          </h2>
+          {matches.length > 0 && <Link className="sec-link" href="/sortear">Sortear um</Link>}
+        </div>
+        {matches.length ? (
+          <Shelf label="Jogos que nós dois queremos">
+            {matches.map((g, i) => (
+              <li key={g.id}><GameCard game={g} tilt={i % 2 ? 'b' : 'a'} /></li>
+            ))}
+          </Shelf>
+        ) : (
+          <p className="quiet">Ainda não tem jogo que os dois marcaram. Marque “quero jogar” em algum e espere a outra metade.</p>
+        )}
       </section>
 
       <div className="us-cols">
