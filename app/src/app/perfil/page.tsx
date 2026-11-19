@@ -33,7 +33,6 @@ export default async function Profile() {
       </header>
 
       <ProfileForm
-        key={`${me.name}|${me.photoPath}|${me.nicknames.join('|')}|${me.useNicknames}`}
         person={me.person} name={me.name} hasPhoto={!!me.photoPath} nicknames={me.nicknames} useNicknames={me.useNicknames}
       />
 

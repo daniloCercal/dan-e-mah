@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { getViewer } from '@/lib/data/viewer'
+import { allow } from '@/lib/rate-limit'
 import { exportAll, gamesCsv, sessionsCsv } from '@/lib/data/export'
 
 const FILES = {
@@ -10,7 +11,9 @@ const FILES = {
 
 /** Download of everything the signed-in member can see: ?formato=json | jogos | diario. */
 export async function GET(request: NextRequest) {
-  if (!(await getViewer())) return new NextResponse('Entre para exportar.', { status: 401 })
+  const viewer = await getViewer()
+  if (!viewer) return new NextResponse('Entre para exportar.', { status: 401 })
+  if (!allow(`export:${viewer.me.userId}`, 10)) return new NextResponse('Devagar: tente de novo em um minuto.', { status: 429 })
   const format = request.nextUrl.searchParams.get('formato') ?? 'json'
   if (!(format in FILES)) return new NextResponse('Formato desconhecido.', { status: 400 })
   const [type, filename] = FILES[format as keyof typeof FILES]
