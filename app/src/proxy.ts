@@ -24,7 +24,7 @@ export async function proxy(request: NextRequest) {
   const signedIn = !!data?.claims
   const { pathname } = request.nextUrl
 
-  if (!signedIn && pathname !== '/entrar' && !pathname.startsWith('/auth/') && !pathname.startsWith('/api/cron/')) {
+  if (!signedIn && pathname !== '/entrar' && pathname !== '/sem-acesso' && !pathname.startsWith('/auth/') && !pathname.startsWith('/api/cron/')) {
     const url = request.nextUrl.clone()
     url.pathname = '/entrar'
     url.search = ''

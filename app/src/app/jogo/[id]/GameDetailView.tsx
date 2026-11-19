@@ -23,6 +23,8 @@ import type { GameReviews } from '@/lib/data/reviews'
 import { RatingBlock } from './RatingBlock'
 import { SaveButton, SaveError } from '@/components/States'
 import { useToast } from '@/components/Toast'
+import { MascotMoment } from '@/components/MascotMoment'
+import { withViewTransition } from '@/lib/transitions'
 
 const other = (p: Person): Person => (p === 'danilo' ? 'maellen' : 'danilo')
 const article = (p: Person) => (p === 'maellen' ? 'a Maellen' : 'o Danilo')
@@ -44,6 +46,7 @@ function StampCard({ game, me, busy, onStamp }: { game: GameDetail; me: Person; 
   const both = done.danilo && done.maellen
   return (
     <section className={both ? 'stampcard stampcard--both' : 'stampcard'} aria-labelledby="h-carimbos">
+      {both && <MascotMoment moment="cheer" size={56} sticker />}
       <h2 className="h3" id="h-carimbos">{both ? 'Zeramos juntos' : 'Carimbos de quem zerou'}</h2>
       <div className="stamp-slots">
         {(['danilo', 'maellen'] as const).map((p) => (
@@ -195,7 +198,7 @@ export function GameDetailView({ game, me, ourTags, reviews, sessions }: { game:
 
   const setEditing = (on: boolean) => router.replace(on ? `${pathname}?editar=1` : pathname, { scroll: false })
 
-  const goBack = () => (window.history.length > 1 ? router.back() : router.push('/biblioteca'))
+  const goBack = () => withViewTransition(() => (window.history.length > 1 ? router.back() : router.push('/biblioteca')))
 
   const saveMine = (status: Status) => {
     setDraft({ mine: status })
@@ -262,6 +265,7 @@ export function GameDetailView({ game, me, ourTags, reviews, sessions }: { game:
       <div className="detail-cols">
         <div className="detail-main">
           <section className="want" aria-label="Quem quer jogar">
+            {match && <MascotMoment moment="giggle" size={52} sticker />}
             <Overlap danilo={dWants} maellen={mWants} size={60} label={wantLabel} />
             <div className="want-text">
               <p className="want-state">{match ? <Marker>{wantLabel}</Marker> : wantLabel}</p>

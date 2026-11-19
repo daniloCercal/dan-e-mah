@@ -1,9 +1,9 @@
-import { Busy, SkBlock, SkLine } from '@/components/Loading'
+import { Busy, PageLoader, SkBlock, SkLine } from '@/components/Loading'
 
 export default function GameLoading() {
   return (
     <div className="page detail" aria-busy="true">
-      <p className="sr-only" role="status">Carregando o jogo</p>
+      <PageLoader label="Abrindo o jogo" row />
       <div className="detail-hero" />
       <header className="detail-head">
         <span className="sk sk-cover" />

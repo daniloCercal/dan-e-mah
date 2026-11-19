@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { MascotMoment } from './MascotMoment'
 
 /** The two circles drift apart and come back to overlap. Static under reduced motion. */
 export function Loader({ size = 28 }: { size?: number }) {
@@ -10,6 +11,16 @@ export function Loader({ size = 28 }: { size?: number }) {
       <g className="loader-d"><circle cx="21" cy="13" r="11" className="pg-line" /></g>
       <g className="loader-m"><circle cx="35" cy="13" r="11" className="pg-line" /></g>
     </svg>
+  )
+}
+
+/** The member's mascot waits while the page loads, with the label spoken once. */
+export function PageLoader({ label, row = false }: { label: string; row?: boolean }) {
+  return (
+    <div className={row ? 'pageloader pageloader--row' : 'pageloader'} role="status">
+      <MascotMoment moment="load" size={row ? 48 : 72} />
+      <span>{label}</span>
+    </div>
   )
 }
 

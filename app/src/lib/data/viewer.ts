@@ -6,7 +6,7 @@ import { isLevel, isWallpaperId, noWallpaper, type WallChoice } from '@/lib/wall
 import type { MascotId } from '@/components/Mascot'
 
 export type ThemeChoice = 'light' | 'dark' | null
-export interface Prefs { blindRatings: boolean; drawMode: 'fila' | 'pacote'; theme: ThemeChoice; wallpaper: WallChoice }
+export interface Prefs { blindRatings: boolean; drawMode: 'fila' | 'pacote'; theme: ThemeChoice; wallpaper: WallChoice; decorative: boolean }
 
 export interface Viewer {
   me: Member
@@ -42,6 +42,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const prefs: Prefs = {
     blindRatings: p.blindRatings === true,
     drawMode: p.drawMode === 'pacote' ? 'pacote' : 'fila',
+    decorative: p.decorative !== false,
     theme: p.theme === 'light' || p.theme === 'dark' ? p.theme : null,
     wallpaper: { id: isWallpaperId(w.id) ? w.id : noWallpaper.id, level: isLevel(w.level) ? w.level : noWallpaper.level },
   }

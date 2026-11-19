@@ -11,6 +11,7 @@ import { Mark } from '@/components/Marks'
 import { useNameOf } from '@/lib/member'
 import { PairGlyph } from '@/components/icons'
 import { SaveButton, SaveError } from '@/components/States'
+import { MascotMoment } from '@/components/MascotMoment'
 
 const article: Record<Person, string> = { danilo: 'o Danilo', maellen: 'a Maellen' }
 const other = (p: Person): Person => (p === 'danilo' ? 'maellen' : 'danilo')
@@ -128,6 +129,7 @@ export function RatingBlock({ gameId, me, reviews, editing, setEditing }: {
       <h2 className="h2" id="h-notas">{split ? 'Um jogo, duas opiniões' : 'Notas'}</h2>
 
       <div className="rating-card">
+        {avg !== null && <MascotMoment moment="giggle" size={52} sticker />}
         <RatingLine danilo={d} maellen={m} />
 
         {avg !== null && gap !== null ? (

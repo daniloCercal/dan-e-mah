@@ -9,6 +9,8 @@ export interface MemberInfo {
   person: Person
   name: string
   mascot: MascotId | null
+  /** False when this member turned the decorative animations off. */
+  decorative: boolean
   partnerName: string | null
   /** Both members' names and (signed) photo addresses, for avatars and labels anywhere. */
   names: Record<Person, string>

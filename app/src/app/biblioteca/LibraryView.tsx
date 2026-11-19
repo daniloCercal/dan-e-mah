@@ -12,6 +12,8 @@ import {
   type FilterState, type Sort, type Tag, type TagGroup,
 } from '@/lib/filters'
 import { Cover } from '@/components/Cover'
+import { MascotMoment } from '@/components/MascotMoment'
+import { GameLink } from '@/components/GameLink'
 import { GameCard, Mark } from '@/components/Marks'
 import { IconClose, IconFilter, IconGrid, IconList, IconSearch, PairGlyph } from '@/components/icons'
 import FilterPanel from './FilterPanel'
@@ -22,7 +24,7 @@ function ListRow({ game }: { game: GameSummary }) {
   const m = isFinished(game.marks.maellen.status)
   const avg = jointAverage(game)
   return (
-    <Link className="row row--lib" href={`/jogo/${game.id}`}>
+    <GameLink className="row row--lib" id={game.id} slot="lista">
       <Cover title={game.title} src={game.cover} />
       <span className="row-text">
         <span className="row-title">{game.title}</span>
@@ -41,7 +43,7 @@ function ListRow({ game }: { game: GameSummary }) {
           {formatRating(avg)}
         </span>
       )}
-    </Link>
+    </GameLink>
   )
 }
 
@@ -124,6 +126,8 @@ export function LibraryView({ games, tags, saved }: { games: GameSummary[]; tags
       </div>
 
       {active.length === 0 && archived.length === 0 ? (
+        <>
+        <MascotMoment moment="peek" size={72} />
         <div className="empty">
           <PairGlyph size={36} />
           <h2 className="h2">Nenhum jogo por aqui ainda</h2>
@@ -134,6 +138,7 @@ export function LibraryView({ games, tags, saved }: { games: GameSummary[]; tags
             <Link className="btn btn--both" href="/adicionar">Adicionar jogo</Link>
           </div>
         </div>
+        </>
       ) : (
         <>
           <div className="lib-tools">
@@ -192,6 +197,8 @@ export function LibraryView({ games, tags, saved }: { games: GameSummary[]; tags
           )}
 
           {results.length === 0 ? (
+            <>
+            <MascotMoment moment="peek" size={72} />
             <div className="empty">
               <PairGlyph size={36} />
               <h2 className="h2">{narrowed ? 'Nenhum jogo com esses filtros' : 'Tudo o que tinha aqui está arquivado'}</h2>
@@ -207,6 +214,7 @@ export function LibraryView({ games, tags, saved }: { games: GameSummary[]; tags
                 <Link className="btn btn--both" href={searching ? `/adicionar?q=${encodeURIComponent(filters.q)}` : '/adicionar'}>Adicionar jogo</Link>
               </div>
             </div>
+            </>
           ) : selecting ? (
             <ul className={filters.view === 'lista' ? 'rows rows--lib' : 'grid'} aria-label="Escolha os jogos">
               {results.map((g) => (

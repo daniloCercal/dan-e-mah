@@ -10,6 +10,7 @@ import { Cover } from '@/components/Cover'
 import { StoreLinks } from '@/components/Fields'
 import { IconCheck, IconSearch } from '@/components/icons'
 import { Busy, Loader, SkRow } from '@/components/Loading'
+import { MascotMoment } from '@/components/MascotMoment'
 import { Overlap } from '@/components/Overlap'
 import { SaveButton, SaveError } from '@/components/States'
 import { ManualForm, type Draft } from './ManualForm'
@@ -202,11 +203,14 @@ export function AddGame({ initialQuery, startManual }: { initialQuery: string; s
           )}
 
           {!typing && searched && results.length === 0 && (
-            <div className="empty empty--left">
-              <h2 className="h2">Não achamos esse</h2>
-              <p>Confira se o nome está certo ou cadastre do seu jeito. Só o título é obrigatório.</p>
-              <button type="button" className="btn btn--both" onClick={() => goManual(text.trim())}>Cadastrar manualmente</button>
-            </div>
+            <>
+              <MascotMoment moment="peek" size={72} edge="start" />
+              <div className="empty empty--left">
+                <h2 className="h2">Não achamos esse</h2>
+                <p>Confira se o nome está certo ou cadastre do seu jeito. Só o título é obrigatório.</p>
+                <button type="button" className="btn btn--both" onClick={() => goManual(text.trim())}>Cadastrar manualmente</button>
+              </div>
+            </>
           )}
           {!(searched && results.length === 0) && found.status !== 'error' && found.status !== 'slow' && (
             <button type="button" className="link" onClick={() => goManual(text.trim())}>Não achei, quero cadastrar manualmente</button>

@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { Cover } from '@/components/Cover'
+import { GameLink } from '@/components/GameLink'
 import { GameCard } from '@/components/Marks'
+import { MascotMoment } from '@/components/MascotMoment'
 import { PairGlyph } from '@/components/icons'
 import { Shelf } from '@/components/Shelf'
 import { listGames } from '@/lib/data/games'
 import { listSessions } from '@/lib/data/sessions'
 import { SessionNote } from '@/components/SessionNote'
-import { isMatch } from '@/lib/people'
+import { isMatch, type Person, type Status } from '@/lib/people'
 import { getViewer } from '@/lib/data/viewer'
 
 function greeting(): string {
@@ -19,6 +21,9 @@ function pickOne(list: string[]): string {
   return list[Math.floor(Math.random() * list.length)]
 }
 
+/** Where a game has been played, so the rating that is still missing is worth asking for. */
+const played: Status[] = ['zerado', 'rejogar', 'abandonado', 'pausado', 'jogando']
+
 export default async function Home() {
   const [viewer, all, sessions] = await Promise.all([getViewer(), listGames(), listSessions()])
   const games = all.filter((g) => !g.archived)
@@ -30,6 +35,7 @@ export default async function Home() {
     return (
       <div className="page">
         <h1 className="hello">{hello}</h1>
+        <MascotMoment moment="peek" size={72} />
         <div className="empty">
           <PairGlyph size={36} />
           <h2 className="h2">A estante ainda está vazia</h2>
@@ -50,21 +56,32 @@ export default async function Home() {
   const recent = games.slice(0, 8)
   const titles = new Map(all.map((g) => [g.id, g.title]))
   const lastSessions = sessions.slice(0, 3)
+  const mine = viewer?.me.person
+  const partner: Person | undefined = mine && (mine === 'danilo' ? 'maellen' : 'danilo')
+  const unrated = mine && partner
+    ? games
+        .filter((g) => g.ratings[mine] === null && played.includes(g.marks[mine].status))
+        .sort((a, b) => played.indexOf(a.marks[mine].status) - played.indexOf(b.marks[mine].status))
+        .slice(0, 3)
+    : []
 
   return (
     <div className="page home">
-      <h1 className="hello" data-person={viewer?.me.person}>{hello}</h1>
+      <div className="title-row">
+        <h1 className="hello" data-person={viewer?.me.person}>{hello}</h1>
+        <MascotMoment moment="appear" once="home" size={52} />
+      </div>
 
       <div className="home-top">
         {current && (
-          <Link className="now press" href={`/jogo/${current.id}`}>
+          <GameLink className="now press" id={current.id} slot="now">
             <Cover title={current.title} src={current.cover} eager />
             <span className="now-text">
               <span className="now-label">Vocês estão jogando</span>
               <span className="now-title">{current.title}</span>
-              <span className="now-go">Abrir o jogo</span>
+              <span className="now-go">Continuar</span>
             </span>
-          </Link>
+          </GameLink>
         )}
 
         <Link className="draw-entry press" href="/sortear">
@@ -108,19 +125,43 @@ export default async function Home() {
         </Shelf>
       </section>
 
-      <section className="sec" aria-labelledby="h-sessoes">
-        <div className="sec-head">
-          <h2 className="h2" id="h-sessoes">Últimas sessões</h2>
-          <Link className="sec-link" href="/diario">Abrir o diário</Link>
-        </div>
-        {lastSessions.length ? (
-          <div className="notes">
-            {lastSessions.map((s) => <SessionNote key={s.id} session={s} title={titles.get(s.gameId) ?? 'Jogo removido'} />)}
-          </div>
-        ) : (
-          <p className="quiet">Depois de jogar, registrem a sessão no diário: quanto tempo durou e o que aconteceu de bom.</p>
+      <div className="home-pair">
+        {mine && partner && unrated.length > 0 && (
+          <section className="sec" aria-labelledby="h-nota">
+            <h2 className="h2" id="h-nota">Falta a sua nota</h2>
+            <ul className="rows">
+              {unrated.map((g) => (
+                <li key={g.id}>
+                  <GameLink className="row" id={g.id} slot="row" query="?avaliar=1">
+                    <Cover title={g.title} src={g.cover} />
+                    <span className="row-text">
+                      <span className="row-title">{g.title}</span>
+                      <span className="row-meta">
+                        {g.ratings[partner] !== null ? `${viewer?.partner?.name ?? 'O outro sócio'} já deu a nota. Falta você.` : 'Você ainda não deu nota.'}
+                      </span>
+                    </span>
+                    <span className="row-go">Dar nota</span>
+                  </GameLink>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
-      </section>
+
+        <section className="sec" aria-labelledby="h-sessoes">
+          <div className="sec-head">
+            <h2 className="h2" id="h-sessoes">Últimas sessões</h2>
+            <Link className="sec-link" href="/diario">Abrir o diário</Link>
+          </div>
+          {lastSessions.length ? (
+            <div className="notes">
+              {lastSessions.map((s) => <SessionNote key={s.id} session={s} title={titles.get(s.gameId) ?? 'Jogo removido'} />)}
+            </div>
+          ) : (
+            <p className="quiet">Depois de jogar, registrem a sessão no diário: quanto tempo durou e o que aconteceu de bom.</p>
+          )}
+        </section>
+      </div>
     </div>
   )
 }

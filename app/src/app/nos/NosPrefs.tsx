@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { setPrefs } from '@/app/actions/prefs'
 import { useToast } from '@/components/Toast'
 
-type Draft = { blindRatings?: boolean; drawMode?: 'fila' | 'pacote' }
+type Draft = { blindRatings?: boolean; drawMode?: 'fila' | 'pacote'; decorative?: boolean }
 
 function Switch({ on, set, label, help, disabled }: { on: boolean; set: (v: boolean) => void; label: string; help: string; disabled?: boolean }) {
   return (
@@ -20,15 +20,18 @@ function Switch({ on, set, label, help, disabled }: { on: boolean; set: (v: bool
 }
 
 /** The person's own preferences that belong to the pair: blind ratings and the way of drawing. */
-export function NosPrefs({ blindRatings, drawMode }: { blindRatings: boolean; drawMode: 'fila' | 'pacote' }) {
+export function NosPrefs({ blindRatings, drawMode, decorative }: { blindRatings: boolean; drawMode: 'fila' | 'pacote'; decorative: boolean }) {
   const toast = useToast()
   const [draft, setDraft] = useState<Draft>({})
   const [busy, setBusy] = useState(false)
   const blind = draft.blindRatings ?? blindRatings
   const mode = draft.drawMode ?? drawMode
+  const lively = draft.decorative ?? decorative
 
   const save = async (patch: Draft) => {
     setDraft((d) => ({ ...d, ...patch }))
+    // Applied on the spot; the server render keeps it from then on, so there is no flash on the next load.
+    if (patch.decorative !== undefined) document.documentElement.toggleAttribute('data-calm', !patch.decorative)
     setBusy(true)
     const res = await setPrefs(patch).catch(() => null)
     setBusy(false)
@@ -37,7 +40,10 @@ export function NosPrefs({ blindRatings, drawMode }: { blindRatings: boolean; dr
       for (const k of Object.keys(patch) as (keyof Draft)[]) delete rest[k]
       return rest
     })
-    if (!res?.ok) toast.notify('Não deu para salvar. Confira a conexão e tente de novo.')
+    if (!res?.ok) {
+      if (patch.decorative !== undefined) document.documentElement.toggleAttribute('data-calm', !decorative)
+      toast.notify('Não deu para salvar. Confira a conexão e tente de novo.')
+    }
   }
 
   return (
@@ -47,6 +53,10 @@ export function NosPrefs({ blindRatings, drawMode }: { blindRatings: boolean; dr
         <Switch
           on={blind} disabled={busy} set={(v) => void save({ blindRatings: v })} label="Nota às cegas"
           help="Ligado, a nota do outro só aparece para você depois de você dar a sua. Vale só para você; cada um liga ou desliga o seu."
+        />
+        <Switch
+          on={lively} disabled={busy} set={(v) => void save({ decorative: v })} label="Animações decorativas"
+          help="Desligado, nada desliza, cai ou comemora: as telas trocam direto, como no modo de movimento reduzido do aparelho. Vale só para você."
         />
         <div className="pref">
           <fieldset className="field draw-mode">

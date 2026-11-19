@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { IconBack } from '@/components/icons'
 import { Mark } from '@/components/Marks'
 import { MascotPicker } from '@/components/MascotPicker'
 import { getViewer } from '@/lib/data/viewer'
@@ -24,6 +26,7 @@ export default async function Profile() {
 
   return (
     <div className="page profile" data-person={me.person}>
+      <Link className="backbtn" href="/nos"><IconBack size={20} />Nós</Link>
       <header className="profile-head">
         <Mark person={me.person} size={96} named={false} />
         <div>
@@ -52,10 +55,10 @@ export default async function Profile() {
 
       {partner && (
         <p className="profile-partner">
-          <span className="member-link" data-person={partner.person}>
+          <Link className="member-link" href={`/perfil/${partner.person}`} data-person={partner.person}>
             <Mark person={partner.person} size={36} named={false} />
-            {partner.name} é o outro sócio. Só {partner.name} muda o que é dele.
-          </span>
+            Ver o perfil de {partner.name}
+          </Link>
         </p>
       )}
 

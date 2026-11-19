@@ -1,12 +1,13 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useLayoutEffect, useRef, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, type Transition } from 'motion/react'
 import { useCalm } from '@/lib/motion'
 import { useMascot, useMascotSync } from '@/lib/mascot'
 import { useMember } from '@/lib/member'
+import { routeCommitted } from '@/lib/transitions'
 import { Mascot } from './Mascot'
 import { Mark } from './Marks'
 import { ToastHost } from './Toast'
@@ -22,7 +23,7 @@ const destinations = [
 ] as const
 
 /** Pages that live outside the club: no header, no tab bar. */
-const OUTSIDE = ['/entrar']
+const OUTSIDE = ['/entrar', '/sem-acesso']
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/'
@@ -31,8 +32,16 @@ function isActive(pathname: string, href: string): boolean {
 
 function Brand() {
   const { id } = useMascot()
+  const calm = useCalm()
+  const ref = useRef<HTMLAnchorElement>(null)
+  const wink = () => {
+    if (calm || !ref.current) return
+    ref.current.classList.remove('a-wink')
+    void ref.current.offsetWidth
+    ref.current.classList.add('a-wink')
+  }
   return (
-    <Link className="brand" href="/">
+    <Link ref={ref} className="brand" href="/" onClick={wink}>
       <Mascot id={id} size={40} />
       <span>Dan & Mah</span>
     </Link>
@@ -58,6 +67,8 @@ export function Shell({ children }: { children: ReactNode }) {
   const calm = useCalm()
   const member = useMember()
   useMascotSync()
+  // Lets a pending cover transition know the new route is on screen.
+  useLayoutEffect(() => { routeCommitted() }, [pathname])
   // The active-tab pill slides from the old tab to the new one instead of jumping.
   const slide: Transition = calm ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }
 

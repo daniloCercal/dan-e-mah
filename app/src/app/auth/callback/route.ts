@@ -10,5 +10,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) return NextResponse.redirect(`${origin}/`)
   }
-  return NextResponse.redirect(`${origin}/entrar?erro=1`)
+  // Closing the Google window is not a refusal; anything else means the account was turned away.
+  if (searchParams.get('error') === 'access_denied') return NextResponse.redirect(`${origin}/entrar`)
+  return NextResponse.redirect(`${origin}/sem-acesso`)
 }

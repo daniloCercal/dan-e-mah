@@ -52,14 +52,14 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const viewer = await getViewer()
   const member = viewer && {
-    slot: viewer.me.slot, person: viewer.me.person, name: viewer.me.name, mascot: viewer.me.mascot,
+    slot: viewer.me.slot, person: viewer.me.person, name: viewer.me.name, mascot: viewer.me.mascot, decorative: viewer.prefs.decorative,
     partnerName: viewer.partner?.name ?? null,
     names: { danilo: 'Danilo', maellen: 'Maellen', [viewer.me.person]: viewer.me.name, ...(viewer.partner && { [viewer.partner.person]: viewer.partner.name }) },
     photos: { danilo: null, maellen: null, [viewer.me.person]: viewer.me.photo, ...(viewer.partner && { [viewer.partner.person]: viewer.partner.photo }) },
   }
   return (
     // The theme script sets data-b-theme before React hydrates, hence the suppressed warning on <html> only.
-    <html lang="pt-BR" className={`${display.variable} ${text.variable}`} style={viewer ? wallpaperVars(viewer.prefs.wallpaper) : undefined} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${display.variable} ${text.variable}`} style={viewer ? wallpaperVars(viewer.prefs.wallpaper) : undefined} data-calm={viewer && !viewer.prefs.decorative ? '' : undefined} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript(viewer?.prefs.theme ?? null) }} />
       </head>

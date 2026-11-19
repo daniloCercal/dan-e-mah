@@ -27,12 +27,15 @@
 
 @media (prefers-reduced-motion: no-preference) {
   /* Header and picker: hover, focus or tap makes the mascot wink. */
+  .a-wink .mascot .g-eye--r,
   .brand:hover .mascot .g-eye--r, .brand:focus-visible .mascot .g-eye--r,
-  .mascot-opt:hover .mascot .g-eye--r, .mascot-opt:focus-visible .mascot .g-eye--r { animation: ms-wink 460ms ease-in-out both; }
+  .mascot-opt:not(.a-cheer):hover .mascot .g-eye--r, .mascot-opt:not(.a-cheer):focus-visible .mascot .g-eye--r { animation: ms-wink 460ms ease-in-out both; }
+  .a-wink .mascot .g-brow--r,
   .brand:hover .mascot .g-brow--r, .brand:focus-visible .mascot .g-brow--r,
-  .mascot-opt:hover .mascot .g-brow--r, .mascot-opt:focus-visible .mascot .g-brow--r { animation: ms-brow 460ms ease-in-out both; }
+  .mascot-opt:not(.a-cheer):hover .mascot .g-brow--r, .mascot-opt:not(.a-cheer):focus-visible .mascot .g-brow--r { animation: ms-brow 460ms ease-in-out both; }
+  .a-wink .mascot .g-all,
   .brand:hover .mascot .g-all, .brand:focus-visible .mascot .g-all,
-  .mascot-opt:hover .mascot .g-all, .mascot-opt:focus-visible .mascot .g-all { animation: ms-tilt 520ms ease-in-out both; }
+  .mascot-opt:not(.a-cheer):hover .mascot .g-all, .mascot-opt:not(.a-cheer):focus-visible .mascot .g-all { animation: ms-tilt 520ms ease-in-out both; }
 
   /* The other seven: put `a-<name>` on any ancestor of the mascot to play it once. */
   .a-appear .mascot .g-all { animation: ms-appear 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }

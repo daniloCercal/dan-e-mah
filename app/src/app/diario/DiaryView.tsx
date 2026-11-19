@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Cover } from '@/components/Cover'
+import { GameLink } from '@/components/GameLink'
+import { MascotMoment } from '@/components/MascotMoment'
 import { PairGlyph, IconPlus } from '@/components/icons'
 import { Stamp } from '@/components/Marks'
 import { SessionForm } from '@/components/SessionForm'
@@ -67,11 +69,11 @@ export function DiaryView({ sessions, games }: { sessions: Session[]; games: Dia
           <ul className="hscroll zeramos-list">
             {together.map((g) => (
               <li key={g.id}>
-                <Link className="zeramos-item" href={`/jogo/${g.id}`}>
+                <GameLink className="zeramos-item" id={g.id} slot="zeramos">
                   <Cover title={g.title} src={g.cover} />
                   <span className="zeramos-stamps"><Stamp person="danilo" size={26} /><Stamp person="maellen" size={26} /></span>
                   <span className="zeramos-title">{g.title}</span>
-                </Link>
+                </GameLink>
               </li>
             ))}
           </ul>
@@ -79,11 +81,14 @@ export function DiaryView({ sessions, games }: { sessions: Session[]; games: Dia
       )}
 
       {sessions.length === 0 && !adding && (
-        <div className="empty diary-empty">
-          <PairGlyph size={36} />
-          <h2 className="h2">Nenhuma sessão registrada</h2>
-          <p className="body">Depois de jogar, registrem a sessão: quanto tempo durou, quem estava e o que aconteceu de bom.</p>
-        </div>
+        <>
+          <MascotMoment moment="peek" size={72} />
+          <div className="empty diary-empty">
+            <PairGlyph size={36} />
+            <h2 className="h2">Nenhuma sessão registrada</h2>
+            <p className="body">Depois de jogar, registrem a sessão: quanto tempo durou, quem estava e o que aconteceu de bom.</p>
+          </div>
+        </>
       )}
 
       {months.map((month) => {

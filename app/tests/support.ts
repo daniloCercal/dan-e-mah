@@ -56,6 +56,7 @@ export async function resetPrefs(who: Who) {
   const prefs = { ...((data?.prefs ?? {}) as Record<string, unknown>) }
   delete prefs.theme
   delete prefs.wallpaper
+  delete prefs.decorative
   await db.from('members').update({ prefs }).eq('user_id', user!.id)
 }
 

@@ -12,6 +12,7 @@ export async function setPrefs(patch: {
   blindRatings?: boolean
   drawMode?: 'fila' | 'pacote'
   theme?: 'light' | 'dark' | null
+  decorative?: boolean
   wallpaper?: { id?: string; level?: string }
 }): Promise<Result> {
   const { me } = await requireViewer()
@@ -21,6 +22,7 @@ export async function setPrefs(patch: {
     if (patch.drawMode !== 'fila' && patch.drawMode !== 'pacote') return { ok: false, error: 'Jeito de sortear inválido.' }
     next.drawMode = patch.drawMode
   }
+  if (patch.decorative !== undefined) next.decorative = patch.decorative === true
   if (patch.theme !== undefined) {
     if (patch.theme !== null && patch.theme !== 'light' && patch.theme !== 'dark') return { ok: false, error: 'Tema inválido.' }
     next.theme = patch.theme

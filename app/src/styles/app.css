@@ -16,3 +16,33 @@ html[data-b-theme='dark'] { background: #1a1326; color-scheme: dark; }
   .door-mark .ov-line { stroke-width: 2.5; }
   .empty .body { max-width: 46ch; }
 }
+
+/* "Animações decorativas" off behaves like the device's reduced motion. */
+html[data-calm] .dir-b *, html[data-calm] .dir-b *::before, html[data-calm] .dir-b *::after {
+  animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+}
+
+/* Mascot moments: the mascot sits where its movement belongs; mascot.css holds the movements. */
+.dir-b {
+  /* The page's loading skeleton takes the cover's place in the shared-element transition. */
+  .detail-head .sk-cover { view-transition-name: b-cover; }
+  .moment { display: inline-block; flex: none; line-height: 0; }
+  .moment--sticker { position: absolute; right: 14px; top: calc(var(--s) * -0.62); pointer-events: none; }
+  /* Peeking over the top edge of an empty box: only the top of the mascot shows. */
+  .moment--peek { display: block; width: var(--s); height: calc(var(--s) * 0.58); margin: 0 auto -2px; overflow: hidden; position: relative; z-index: 1; }
+  .door-figure { position: relative; display: grid; justify-items: center; }
+  .door-figure .moment { position: absolute; right: -44px; bottom: -34px; }
+  .draw-done { margin-top: 24px; }
+  .moment--start { margin-left: 20px; }
+  .want, .stampcard, .rating-card, .draw-done { position: relative; }
+  .title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .title-row > :first-child { min-width: 0; }
+  .dead-figure { position: relative; display: inline-block; }
+  .dead-figure .moment { position: absolute; left: 70%; bottom: 8px; }
+  .alert--mascot::before { display: none; }
+  .alert--mascot > .moment { grid-column: 1; grid-row: 1 / span 3; }
+  .pageloader--row { display: flex; padding: 8px 0; justify-content: flex-start; align-items: center; gap: 12px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-calm]) .dir-b .moment--peek.a-peek .mascot { margin-top: calc(var(--s) * -0.42); }
+}

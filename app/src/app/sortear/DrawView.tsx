@@ -13,6 +13,7 @@ import { useToast } from '@/components/Toast'
 import { Cover } from '@/components/Cover'
 import { Stamp } from '@/components/Marks'
 import { IconCheck, PairGlyph } from '@/components/icons'
+import { MascotMoment } from '@/components/MascotMoment'
 import { PackReveal } from './PackReveal'
 
 type Mode = 'fila' | 'pacote'
@@ -205,6 +206,7 @@ export function DrawView({ games, tags, initialMode }: { games: GameSummary[]; t
             )}
             {chosen && picked ? (
               <div className="draw-done" role="status">
+                <MascotMoment moment="cheer" size={64} sticker />
                 <p className="draw-done-title">Fechado. Hoje é dia de {picked.title}.</p>
                 <div className="editor-actions">
                   <Link className="btn btn--ink" href={`/jogo/${picked.id}`}>Abrir o jogo</Link>

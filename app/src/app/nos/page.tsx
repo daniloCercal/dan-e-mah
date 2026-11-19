@@ -9,6 +9,7 @@ import { clubStats } from '@/lib/stats'
 import { formatRating, gapLine, jointAverage, ratingGap } from '@/lib/people'
 import { EmptyPage } from '@/components/States'
 import { Cover } from '@/components/Cover'
+import { GameLink } from '@/components/GameLink'
 import { GameCard } from '@/components/Marks'
 import { Shelf } from '@/components/Shelf'
 import { isMatch } from '@/lib/people'
@@ -16,6 +17,7 @@ import { Mark } from '@/components/Marks'
 import { Marker } from '@/components/Marker'
 import { RatingLine } from '@/components/Overlap'
 import { PairGlyph } from '@/components/icons'
+import { MascotMoment } from '@/components/MascotMoment'
 import { NosPrefs } from './NosPrefs'
 import { InstallHelp } from './InstallHelp'
 
@@ -45,7 +47,10 @@ export default async function Us() {
 
   return (
     <div className="page us">
-      <h1 className="h1">Nós</h1>
+      <div className="title-row">
+        <h1 className="h1">Nós</h1>
+        <MascotMoment moment="float" size={52} />
+      </div>
 
       <section className="sec" aria-labelledby="h-socios">
         <h2 className="h2" id="h-socios">Os dois sócios</h2>
@@ -59,11 +64,11 @@ export default async function Us() {
                   <span className="member-state">É você. Editar perfil</span>
                 </Link>
               ) : (
-                <div className="member" data-person={m.person}>
+                <Link className="member press" data-person={m.person} href={`/perfil/${m.person}`}>
                   <Mark person={m.person} size={56} named={false} />
                   <span className="member-name">{m.name}</span>
-                  <span className="member-state">Sócio do clube</span>
-                </div>
+                  <span className="member-state">Ver perfil</span>
+                </Link>
               )}
             </li>
           ))}
@@ -142,7 +147,7 @@ export default async function Us() {
             <ol className="rows rows--rank">
               {stats.top.map((g, i) => (
                 <li key={g.id}>
-                  <Link className="row row--rank" href={`/jogo/${g.id}`}>
+                  <GameLink className="row row--rank" id={g.id} slot="top">
                     <span className="rank" aria-hidden="true">{i + 1}</span>
                     <Cover title={g.title} src={g.cover} />
                     <span className="row-text">
@@ -156,7 +161,7 @@ export default async function Us() {
                       <span className="sr-only">Nota de nós dois</span>
                       {formatRating(jointAverage(g))}
                     </span>
-                  </Link>
+                  </GameLink>
                 </li>
               ))}
             </ol>
@@ -207,7 +212,7 @@ export default async function Us() {
         </div>
       </div>
 
-      <NosPrefs blindRatings={viewer.prefs.blindRatings} drawMode={viewer.prefs.drawMode} />
+      <NosPrefs blindRatings={viewer.prefs.blindRatings} drawMode={viewer.prefs.drawMode} decorative={viewer.prefs.decorative} />
       <InstallHelp />
     </div>
   )

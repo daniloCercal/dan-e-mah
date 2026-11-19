@@ -1,9 +1,13 @@
 import { Busy, SkCard, SkNow } from '@/components/Loading'
+import { MascotMoment } from '@/components/MascotMoment'
 
 export default function HomeLoading() {
   return (
     <div className="page home">
-      <h1 className="hello">Abrindo o clube</h1>
+      <div className="title-row">
+        <h1 className="hello">Abrindo o clube</h1>
+        <MascotMoment moment="load" size={52} />
+      </div>
       <div className="home-top">
         <Busy label="Carregando o que vocês estão jogando"><SkNow /></Busy>
       </div>

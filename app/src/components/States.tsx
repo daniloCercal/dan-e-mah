@@ -1,17 +1,21 @@
 import type { ReactNode } from 'react'
 import { PairGlyph } from './icons'
 import { Loader } from './Loading'
+import { MascotMoment } from './MascotMoment'
 
 /** Shared layout for "nothing here" screens: the mark with both circles empty, a title, what to do. */
 export function Dead({ title, children, actions }: { title: string; children: ReactNode; actions: ReactNode }) {
   return (
     <div className="page dead">
-      <svg className="dead-mark" width="120" height="62" viewBox="0 0 100 52" aria-hidden="true">
-        <circle cx="36" cy="26" r="20" className="ov-off" />
-        <circle cx="64" cy="26" r="20" className="ov-off" />
-        <circle cx="36" cy="26" r="20" className="ov-line ov-dash" />
-        <circle cx="64" cy="26" r="20" className="ov-line ov-dash" />
-      </svg>
+      <div className="dead-figure">
+        <svg className="dead-mark" width="120" height="62" viewBox="0 0 100 52" aria-hidden="true">
+          <circle cx="36" cy="26" r="20" className="ov-off" />
+          <circle cx="64" cy="26" r="20" className="ov-off" />
+          <circle cx="36" cy="26" r="20" className="ov-line ov-dash" />
+          <circle cx="64" cy="26" r="20" className="ov-line ov-dash" />
+        </svg>
+        <MascotMoment moment="startle" size={56} />
+      </div>
       <h1 className="h1">{title}</h1>
       <div className="dead-text">{children}</div>
       <div className="dead-actions">{actions}</div>
@@ -31,6 +35,7 @@ export function EmptyPage({ title, heading, children, actions }: {
       <div className="lib-head">
         <h1 className="h1">{title}</h1>
       </div>
+      <MascotMoment moment="peek" size={72} />
       <div className="empty">
         <PairGlyph size={36} />
         <h2 className="h2">{heading}</h2>
@@ -67,7 +72,8 @@ export function SaveButton({ pending, failed = false, label, pendingLabel = 'Sal
 /** Inline failure for a save: says what happened, that nothing was lost, and what to do. */
 export function SaveError({ children, onRetry }: { children?: ReactNode; onRetry?: () => void }) {
   return (
-    <div className="alert" role="alert">
+    <div className="alert alert--mascot" role="alert">
+      <MascotMoment moment="startle" size={40} />
       <p>
         <strong>Não deu para salvar.</strong> {children ?? 'O que você preencheu continua aqui. Confira a conexão e tente de novo.'}
       </p>

@@ -1,11 +1,11 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
 import { initialOf, statusLabels, isFinished, type Person } from '@/lib/people'
 import { useMember, usePersonName } from '@/lib/member'
 import type { GameSummary } from '@/lib/data/games'
 import { Cover } from './Cover'
+import { GameLink } from './GameLink'
 
 /**
  * A person's avatar: the profile photo inside a ring in their colour, or the initial on their colour.
@@ -68,12 +68,12 @@ export function CardCaption({ game }: { game: Pick<GameSummary, 'title' | 'share
 }
 
 /** Cover card used in the library grid and the short lists. */
-export function GameCard({ game, tilt, eager }: { game: GameSummary; tilt?: 'a' | 'b'; eager?: boolean }) {
+export function GameCard({ game, tilt, eager, slot = 'card' }: { game: GameSummary; tilt?: 'a' | 'b'; eager?: boolean; slot?: string }) {
   return (
-    <Link className="gcard" href={`/jogo/${game.id}`}>
+    <GameLink className="gcard" id={game.id} slot={slot}>
       <Cover title={game.title} src={game.cover} tilt={tilt} eager={eager} />
       <CardCaption game={game} />
-    </Link>
+    </GameLink>
   )
 }
 
