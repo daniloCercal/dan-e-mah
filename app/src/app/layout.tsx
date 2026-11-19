@@ -36,6 +36,7 @@ const text = Onest({
 export const metadata: Metadata = {
   title: { default: 'Dan & Mah', template: '%s · Dan & Mah' },
   description: 'Os jogos que a gente jogou, está jogando e ainda quer jogar.',
+  appleWebApp: { capable: true, title: 'Dan & Mah', statusBarStyle: 'default' },
 }
 
 export const viewport: Viewport = {

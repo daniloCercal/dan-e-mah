@@ -17,6 +17,7 @@ import { Marker } from '@/components/Marker'
 import { RatingLine } from '@/components/Overlap'
 import { PairGlyph } from '@/components/icons'
 import { NosPrefs } from './NosPrefs'
+import { InstallHelp } from './InstallHelp'
 
 export const metadata: Metadata = { title: 'Nós' }
 
@@ -207,6 +208,7 @@ export default async function Us() {
       </div>
 
       <NosPrefs blindRatings={viewer.prefs.blindRatings} drawMode={viewer.prefs.drawMode} />
+      <InstallHelp />
     </div>
   )
 }
