@@ -30,3 +30,7 @@ export const statusLabels: Record<Status, string> = {
 export const allStatuses = Object.keys(statusLabels) as Status[]
 
 export const isFinished = (s: Status) => s === 'zerado' || s === 'rejogar'
+
+/** A match: both want to play it and the pair has not finished or dropped it. */
+export const isMatch = (g: { shared: Status; marks: Record<Person, { wants: boolean }> }) =>
+  g.marks.danilo.wants && g.marks.maellen.wants && g.shared !== 'zerado' && g.shared !== 'abandonado'

@@ -3,7 +3,8 @@ import { Cover } from '@/components/Cover'
 import { GameCard } from '@/components/Marks'
 import { PairGlyph } from '@/components/icons'
 import { Shelf } from '@/components/Shelf'
-import { isMatch, listGames } from '@/lib/data/games'
+import { listGames } from '@/lib/data/games'
+import { isMatch } from '@/lib/people'
 import { getViewer } from '@/lib/data/viewer'
 
 function greeting(): string {

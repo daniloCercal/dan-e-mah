@@ -131,6 +131,3 @@ export async function igdbIdsInLibrary(ids: number[]): Promise<Map<number, numbe
   data?.forEach((r) => { if (r.igdb_id != null) out.set(Number(r.igdb_id), r.id) })
   return out
 }
-
-export const isMatch = (g: Pick<GameSummary, 'shared' | 'marks'>) =>
-  g.marks.danilo.wants && g.marks.maellen.wants && g.shared !== 'zerado' && g.shared !== 'abandonado'
