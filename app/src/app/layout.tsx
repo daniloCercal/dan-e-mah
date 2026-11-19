@@ -12,6 +12,7 @@ import '@/styles/flows.css'
 import '@/styles/states.css'
 import '@/styles/more.css'
 import '@/styles/app.css'
+import '@/styles/mascot.css'
 
 // Display face: the prototype loads opsz 12..96, wdth 75..100, wght 200..800 (the full variable font).
 const display = Bricolage_Grotesque({

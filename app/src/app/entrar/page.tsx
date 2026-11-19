@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { GoogleG } from '@/components/icons'
+import { GoogleSignIn } from '@/components/GoogleSignIn'
 
 export const metadata: Metadata = { title: 'Entrar' }
 
 /** The door: the mark, the name, one way in. Outside the shell (no header, no tab bar). */
-export default function SignIn() {
+export default async function SignIn({ searchParams }: PageProps<'/entrar'>) {
+  const { erro } = await searchParams
   return (
     <div className="door door--enter">
       {/* Each circle slides in from its side; the shared lens appears once they meet. */}
@@ -19,11 +19,8 @@ export default function SignIn() {
       <div className="door-body">
         <h1 className="door-name">Dan & Mah</h1>
         <p className="door-line">Os jogos que a gente jogou, está jogando e ainda quer jogar.</p>
-        {/* Stage 2 turns this into the Google sign-in; for now it opens the club. */}
-        <Link className="btn btn--big door-btn" href="/">
-          <GoogleG />
-          Entrar com Google
-        </Link>
+        <GoogleSignIn />
+        {erro && <p className="quiet door-note" role="alert">Essa conta não pode entrar. Use o e-mail de um dos dois sócios.</p>}
         <p className="quiet door-note">Este clube tem exatamente dois sócios. Só as contas deles entram.</p>
       </div>
     </div>

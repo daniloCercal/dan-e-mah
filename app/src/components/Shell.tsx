@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, type Transition } from 'motion/react'
 import { useCalm } from '@/lib/motion'
+import { useMascot } from '@/lib/mascot'
+import { Mascot } from './Mascot'
 import { IconDiary, IconHome, IconLibrary, IconPlus, PairGlyph } from './icons'
 import { OfflineBanner } from './OfflineBanner'
 import { ThemeToggle } from './ThemeToggle'
@@ -25,9 +27,10 @@ function isActive(pathname: string, href: string): boolean {
 }
 
 function Brand() {
+  const { id } = useMascot()
   return (
     <Link className="brand" href="/">
-      <PairGlyph size={26} className="brand-mark" />
+      <Mascot id={id} size={40} />
       <span>Dan & Mah</span>
     </Link>
   )
