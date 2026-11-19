@@ -42,9 +42,11 @@ export function AddGame({ initialQuery, startManual }: { initialQuery: string; s
   const [savedId, setSavedId] = useState<number | null>(null)
   const [dupeId, setDupeId] = useState<number | null>(null)
   const heading = useRef<HTMLHeadingElement>(null)
-  const [found, setFound] = useState<Found>({ status: 'idle', results: [] })
+  const [answer, setFound] = useState<Found & { key: string }>({ key: '', status: 'idle', results: [] })
   const [attempt, setAttempt] = useState(0)
   const saving = useSave()
+  const short = query.trim().length < 2
+  const askKey = `${query.trim()}#${attempt}`
 
   useEffect(() => {
     const t = setTimeout(() => setQuery(text), 300)
@@ -57,23 +59,21 @@ export function AddGame({ initialQuery, startManual }: { initialQuery: string; s
 
   // The catalog answers through our server; a newer query cancels the older one.
   useEffect(() => {
-    if (query.trim().length < 2) {
-      setFound({ status: 'idle', results: [] })
-      return
-    }
+    if (query.trim().length < 2) return
     const ctl = new AbortController()
-    setFound({ status: 'searching', results: [] })
+    const key = askKey
     fetch(`/api/igdb/search?q=${encodeURIComponent(query.trim())}`, { signal: ctl.signal })
       .then(async (res) => {
-        if (res.status === 429) return setFound({ status: 'slow', results: [] })
-        if (!res.ok || !res.headers.get('content-type')?.includes('json')) return setFound({ status: 'error', results: [] })
+        if (res.status === 429) return setFound({ key, status: 'slow', results: [] })
+        if (!res.ok || !res.headers.get('content-type')?.includes('json')) return setFound({ key, status: 'error', results: [] })
         const body = (await res.json()) as { results: Hit[] }
-        setFound({ status: 'done', results: body.results })
+        setFound({ key, status: 'done', results: body.results })
       })
-      .catch((e) => { if ((e as Error).name !== 'AbortError') setFound({ status: 'error', results: [] }) })
+      .catch((e) => { if ((e as Error).name !== 'AbortError') setFound({ key, status: 'error', results: [] }) })
     return () => ctl.abort()
-  }, [query, attempt])
+  }, [query, attempt, askKey])
 
+  const found: Found = short ? { status: 'idle', results: [] } : askKey !== answer.key ? { status: 'searching', results: [] } : answer
   const results = found.results
   const searched = found.status === 'done'
   const typing = text.trim().length >= 2 && (text !== query || found.status === 'searching')

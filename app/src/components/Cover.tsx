@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { PairGlyph } from './icons'
 
 interface Props {
@@ -12,17 +12,17 @@ interface Props {
   describe?: boolean
 }
 
-export function Cover({ title, src, tilt, eager, describe }: Props) {
+/** Keyed by the address so a new cover starts from a clean state. */
+export function Cover(props: Props) {
+  return <CoverImage key={props.src ?? ''} {...props} />
+}
+
+function CoverImage({ title, src, tilt, eager, describe }: Props) {
   const [failed, setFailed] = useState(false)
   const [arrived, setArrived] = useState(false)
-  const img = useRef<HTMLImageElement>(null)
   const missing = failed || !src
-  useEffect(() => {
-    setFailed(false)
-    setArrived(false)
-    // A cached image may already be complete before React attaches onLoad.
-    if (img.current?.complete && img.current.naturalWidth > 0) setArrived(true)
-  }, [src])
+  // A cached image may already be complete before React attaches onLoad.
+  const attach = (el: HTMLImageElement | null) => { if (el?.complete && el.naturalWidth > 0) setArrived(true) }
   return (
     <span className="cover" data-tilt={tilt}>
       {missing ? (
@@ -35,7 +35,7 @@ export function Cover({ title, src, tilt, eager, describe }: Props) {
         // Covers come from the catalog CDN or a signed storage address, so next/image does not apply.
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          ref={img} data-arrived={arrived || undefined} onLoad={() => setArrived(true)}
+          ref={attach} data-arrived={arrived || undefined} onLoad={() => setArrived(true)}
           src={src} alt={describe ? title : ''} width={600} height={900}
           loading={eager ? 'eager' : 'lazy'} decoding="async" onError={() => setFailed(true)}
         />

@@ -21,6 +21,8 @@ export const IconSearch = (p: P) => <Icon {...p}><circle cx="11" cy="11" r="6.5"
 export const IconGrid = (p: P) => <Icon {...p}><rect x="4" y="4" width="6.5" height="6.5" rx="1.5" /><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5" /><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5" /><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5" /></Icon>
 export const IconList = (p: P) => <Icon {...p}><path d="M9 6h11M9 12h11M9 18h11" /><circle cx="4.5" cy="6" r="1" /><circle cx="4.5" cy="12" r="1" /><circle cx="4.5" cy="18" r="1" /></Icon>
 export const IconClose = (p: P) => <Icon {...p}><path d="m6 6 12 12M18 6 6 18" /></Icon>
+export const IconFilter = (p: P) => <Icon {...p}><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></Icon>
+export const IconChevron = (p: P) => <Icon {...p}><path d="m7 10 5 5 5-5" /></Icon>
 export const IconBack = (p: P) => <Icon {...p}><path d="M14.5 5 8 12l6.5 7" /></Icon>
 export const IconCheck = (p: P) => <Icon {...p}><path d="m5 12.5 4.5 4.5L19 7.5" /></Icon>
 

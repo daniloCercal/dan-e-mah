@@ -34,3 +34,15 @@ export const isFinished = (s: Status) => s === 'zerado' || s === 'rejogar'
 /** A match: both want to play it and the pair has not finished or dropped it. */
 export const isMatch = (g: { shared: Status; marks: Record<Person, { wants: boolean }> }) =>
   g.marks.danilo.wants && g.marks.maellen.wants && g.shared !== 'zerado' && g.shared !== 'abandonado'
+
+export type Ratings = Record<Person, number | null>
+
+/** The pair's rating exists only when both have rated. */
+export const jointAverage = (g: { ratings: Ratings }): number | null =>
+  g.ratings.danilo !== null && g.ratings.maellen !== null ? (g.ratings.danilo + g.ratings.maellen) / 2 : null
+
+export const ratingGap = (g: { ratings: Ratings }): number | null =>
+  g.ratings.danilo !== null && g.ratings.maellen !== null ? Math.abs(g.ratings.danilo - g.ratings.maellen) : null
+
+export const formatRating = (n: number | null | undefined): string =>
+  n === null || n === undefined ? '–' : n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 })

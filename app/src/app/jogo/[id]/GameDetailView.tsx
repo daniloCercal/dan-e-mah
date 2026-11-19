@@ -6,7 +6,9 @@ import type { GameDetail } from '@/lib/data/games'
 import { isFinished, isMatch, allStatuses, statusLabels, type Person, type Status } from '@/lib/people'
 import { setArchived, setMyStatus, setRemoved, setSharedStatus, setWants, updateGame } from '@/app/actions/games'
 import { useSave } from '@/lib/useSave'
-import { Confirm, CoverPicker, LinksEditor, StoreLinks, type PickedCover } from '@/components/Fields'
+import { Confirm, CoverPicker, LinksEditor, NewTag, StoreLinks, type PickedCover } from '@/components/Fields'
+import { setGameTag } from '@/app/actions/library'
+import type { Tag } from '@/lib/filters'
 import { Cover } from '@/components/Cover'
 import { IconBack, IconCheck, PairGlyph } from '@/components/icons'
 import { Marker } from '@/components/Marker'
@@ -134,7 +136,39 @@ function Manage({ game, editing, onEdit }: { game: GameDetail; editing: boolean;
   )
 }
 
-export function GameDetailView({ game, me }: { game: GameDetail; me: Person }) {
+/** Our own tags on this game: tap to put one on or take it off; "Nova tag" creates one and puts it on. */
+function OurTags({ game, ours }: { game: GameDetail; ours: Tag[] }) {
+  const router = useRouter()
+  const toast = useToast()
+  const [open, setOpen] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const on = new Set(game.tags.map((t) => t.id))
+  const flip = async (tag: Tag, next: boolean) => {
+    setBusy(true)
+    const res = await setGameTag(game.id, tag.id, next).catch(() => null)
+    setBusy(false)
+    if (!res?.ok) return toast.notify('Não deu para salvar. Confira a conexão e tente de novo.')
+    router.refresh()
+  }
+  return (
+    <>
+      <button type="button" className="link" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? 'Pronto' : 'Editar tags nossas'}</button>
+      {open && (
+        <div className="chips" role="group" aria-label="Tags nossas deste jogo">
+          {ours.map((t) => (
+            <button key={t.id} type="button" className={on.has(t.id) ? 'chip chip--on' : 'chip'} aria-pressed={on.has(t.id)} disabled={busy} onClick={() => void flip(t, !on.has(t.id))}>
+              {on.has(t.id) && <IconCheck size={16} />}
+              {t.name}
+            </button>
+          ))}
+          <NewTag onCreate={(t) => void flip(t, true)} />
+        </div>
+      )}
+    </>
+  )
+}
+
+export function GameDetailView({ game, me, ourTags }: { game: GameDetail; me: Person; ourTags: Tag[] }) {
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
@@ -262,6 +296,7 @@ export function GameDetailView({ game, me }: { game: GameDetail; me: Person }) {
             ) : (
               <p className="quiet">Sem tags por enquanto.</p>
             )}
+            <OurTags game={game} ours={ourTags} />
           </section>
 
           <section className="sec sec--tight o-about" aria-labelledby="h-sobre">

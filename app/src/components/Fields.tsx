@@ -5,7 +5,9 @@ import { createClient } from '@/lib/supabase/client'
 import { parseLink } from '@/lib/links'
 import type { CoverInput } from '@/app/actions/games'
 import { Cover } from './Cover'
-import { IconClose } from './icons'
+import { createTag } from '@/app/actions/library'
+import type { Tag } from '@/lib/filters'
+import { IconClose, IconPlus } from './icons'
 
 /** In-page confirmation for destructive actions. Focus goes to the safe choice. */
 export function Confirm({ title, children, action, onConfirm, onCancel }: { title: string; children: ReactNode; action: string; onConfirm: () => void; onCancel: () => void }) {
@@ -184,5 +186,47 @@ export function CoverPicker({ title, value, fallback, onChange }: {
       </div>
       {error && <p className="field-error" role="alert">{error}</p>}
     </div>
+  )
+}
+
+/** "Nova tag": a chip that turns into a small field. Enter creates, Escape gives up. */
+export function NewTag({ onCreate }: { onCreate: (tag: Tag) => void }) {
+  const [open, setOpen] = useState(false)
+  const [text, setText] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const submit = async () => {
+    if (!text.trim() || busy) return
+    setBusy(true)
+    setError(null)
+    const res = await createTag(text).catch(() => null)
+    setBusy(false)
+    if (!res?.ok) return setError(res ? res.error : 'Sem conexão. Tente de novo.')
+    onCreate(res.tag)
+    setText('')
+    setOpen(false)
+  }
+  if (!open) {
+    return (
+      <button type="button" className="chip chip--new" onClick={() => setOpen(true)}>
+        <IconPlus size={16} />
+        Nova tag
+      </button>
+    )
+  }
+  return (
+    <span className="newtag">
+      <input
+        type="text" value={text} maxLength={28} autoFocus aria-label="Nome da nova tag" placeholder="Nome da tag"
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') { e.preventDefault(); void submit() }
+          if (e.key === 'Escape') { e.stopPropagation(); setOpen(false) }
+        }}
+      />
+      <button type="button" className="btn btn--ink btn--small" disabled={!text.trim() || busy} onClick={() => void submit()}>Criar</button>
+      <button type="button" className="iconbtn iconbtn--small" onClick={() => setOpen(false)} aria-label="Desistir da nova tag"><IconClose size={18} /></button>
+      {error && <span className="field-error" role="alert">{error}</span>}
+    </span>
   )
 }

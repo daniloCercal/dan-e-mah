@@ -15,16 +15,13 @@ let nextSlot = 0
 export function Marker({ children, variant }: { children: ReactNode; variant?: 'b' | 'c' }) {
   const calm = useCalm()
   const ref = useRef<HTMLSpanElement>(null)
-  const [phase, setPhase] = useState<'wait' | 'draw' | 'done'>(calm ? 'done' : 'wait')
+  const [state, setPhase] = useState<'wait' | 'draw' | 'done'>('wait')
+  const phase = calm ? 'done' : state
   const [delay, setDelay] = useState(0)
 
   useEffect(() => {
-    if (calm) {
-      setPhase('done')
-      return
-    }
     const node = ref.current
-    if (!node || phase !== 'wait') return
+    if (calm || !node || phase !== 'wait') return
     const start = () => {
       const now = performance.now()
       const at = Math.max(now, nextSlot)

@@ -1,6 +1,7 @@
 import 'server-only'
 import { createClient } from '@/lib/supabase/server'
-import { personOf, type Person, type Slot, type Status } from '@/lib/people'
+import { personOf, type Person, type Ratings, type Slot, type Status } from '@/lib/people'
+import type { Tag } from '@/lib/filters'
 import { requireViewer } from './viewer'
 
 export interface Mine { status: Status; wants: boolean; owned: boolean; finishedOn: string | null }
@@ -16,6 +17,9 @@ export interface GameSummary {
   addedAt: string
   archived: boolean
   marks: Marks
+  tagIds: number[]
+  /** Only the ratings this person is allowed to see: with blind ratings on, the other one's stays null until they rate. */
+  ratings: Ratings
 }
 
 export interface GameDetail extends GameSummary {
@@ -23,7 +27,7 @@ export interface GameDetail extends GameSummary {
   source: 'igdb' | 'manual'
   links: { id: number; store: string; url: string }[]
   coverPath: string | null
-  tags: { id: number; kind: string; name: string }[]
+  tags: Tag[]
 }
 
 export const blank = (): Mine => ({ status: 'lista', wants: false, owned: false, finishedOn: null })
@@ -33,9 +37,11 @@ interface GameRow {
   id: number; title: string; release_year: number | null; developer: string | null; cover_url: string | null
   cover_path: string | null; shared_status: Status; created_at: string; archived_at: string | null
   game_member_state: StateRow[]
+  game_tags: { tag_id: number; tags?: Tag | null }[]
+  reviews: { user_id: string; rating: number }[]
 }
 
-const SUMMARY = 'id, title, release_year, developer, cover_url, cover_path, shared_status, created_at, archived_at, game_member_state(user_id, status, wants, owned, finished_on)'
+const SUMMARY = 'id, title, release_year, developer, cover_url, cover_path, shared_status, created_at, archived_at, game_member_state(user_id, status, wants, owned, finished_on), game_tags(tag_id), reviews(user_id, rating)'
 
 /** Covers uploaded by hand live in a private bucket: they are shown through short-lived signed addresses. */
 async function signCovers(paths: string[]): Promise<Map<string, string>> {
@@ -55,7 +61,13 @@ function toSummary(r: GameRow, slots: Map<string, Slot>, signed: Map<string, str
     if (!slot) continue
     marks[personOf(slot)] = { status: s.status, wants: s.wants, owned: s.owned, finishedOn: s.finished_on }
   }
+  const ratings: Ratings = { danilo: null, maellen: null }
+  for (const v of r.reviews ?? []) {
+    const slot = slots.get(v.user_id)
+    if (slot) ratings[personOf(slot)] = Number(v.rating)
+  }
   return {
+    tagIds: (r.game_tags ?? []).map((t) => t.tag_id), ratings,
     id: r.id, title: r.title, year: r.release_year, developer: r.developer,
     cover: r.cover_url ?? (r.cover_path ? signed.get(r.cover_path) ?? null : null),
     shared: r.shared_status, addedAt: r.created_at, archived: !!r.archived_at, marks,
@@ -86,7 +98,7 @@ export async function getGame(id: number): Promise<GameDetail | null> {
   const supabase = await createClient()
   const [{ data, error }, slots] = await Promise.all([
     supabase.from('games')
-      .select(`${SUMMARY}, description, source, game_links(id, store, url), game_tags(tags(id, kind, name))`)
+      .select(`${SUMMARY.replace('game_tags(tag_id)', 'game_tags(tag_id, tags(id, kind, name, slug))')}, description, source, game_links(id, store, url)`)
       .eq('id', id).is('removed_at', null).maybeSingle(),
     slotMap(),
   ])
@@ -95,7 +107,6 @@ export async function getGame(id: number): Promise<GameDetail | null> {
   const r = data as unknown as GameRow & {
     description: string | null; source: 'igdb' | 'manual'
     game_links: { id: number; store: string; url: string }[]
-    game_tags: { tags: { id: number; kind: string; name: string } | null }[]
   }
   const signed = await signCovers(!r.cover_url && r.cover_path ? [r.cover_path] : [])
   return {
