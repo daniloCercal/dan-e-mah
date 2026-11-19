@@ -1,0 +1,23 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+*.local
+.DS_Store
+Thumbs.db
+
+# --- não publicar ---
+# Capturas e demonstrações: pesadas e contêm capas de jogos de terceiros
+artifacts/screenshots/
+artifacts/motion/
+# Rosto e logo do protótipo: inspirados em personagem de terceiros; serão substituídos por mascote original
+artifacts/design/rosto-*.svg
+artifacts/design/dan-e-mah.svg
+artifacts/design/favicon*
+prototypes/design-lab/src/directions/b/assets/
+prototypes/design-lab/public/favicon*
+prototypes/design-lab/public/apple-touch-icon.png
+prototypes/design-lab/public/icon-*.png
+# Ferramentas locais do assistente (skill de terceiros, licença própria)
+.claude/

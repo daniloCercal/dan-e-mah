@@ -1,0 +1,306 @@
+/* Direction A: the draw screen and “Sessão de hoje”, the one orchestrated moment. */
+
+.dir-a .strip {
+  display: flex;
+  gap: 8px;
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 2px var(--gutter) 10px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: var(--gutter);
+  scrollbar-width: thin;
+}
+
+.dir-a .strip > li {
+  flex: 0 0 68px;
+  scroll-snap-align: start;
+}
+
+.dir-a .draw-go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin-top: 18px;
+}
+
+.dir-a .draw-go .btn--big {
+  flex: 1 1 100%;
+}
+
+@media (min-width: 600px) {
+  .dir-a .strip > li {
+    flex-basis: 92px;
+  }
+
+  .dir-a .draw-go .btn--big {
+    flex: 0 0 auto;
+    min-width: 260px;
+  }
+}
+
+/* ---------- reveal ---------- */
+
+.dir-a .reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.dir-a .reveal--contained {
+  position: absolute;
+  z-index: 0;
+}
+
+.dir-a .reveal-dark {
+  position: absolute;
+  inset: 0;
+  background: #07090c;
+}
+
+.dir-a .reveal-back {
+  display: none;
+}
+
+.dir-a .reveal-art {
+  position: absolute;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  object-position: 50% 0%;
+  transform-origin: 50% 50%;
+}
+
+/* Scrim under the title and credits. The art above it stays untouched. */
+.dir-a .reveal-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(14 17 22 / 0) 30%,
+    rgb(14 17 22 / 0.6) 50%,
+    rgb(14 17 22 / 0.94) 62%,
+    #0e1116 70%
+  );
+}
+
+.dir-a .reveal-content {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 0 var(--gutter) calc(20px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+.dir-a .reveal-title {
+  width: 100%;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(42px, 12.5vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  outline: none;
+}
+
+/* The mask line: the title is clipped by this box and rises from behind the rule below it. */
+.dir-a .reveal-mask {
+  display: block;
+  overflow: hidden;
+  padding: 0.06em 0 0.14em;
+}
+
+.dir-a .reveal-rise {
+  display: block;
+}
+
+.dir-a .reveal-rule {
+  width: 100%;
+  max-width: 420px;
+  height: 1px;
+  background: var(--text);
+  opacity: 0.55;
+}
+
+.dir-a .reveal-credits {
+  margin-top: 14px;
+}
+
+.dir-a .reveal-credits .billing {
+  font-size: 21px;
+  max-width: 17em;
+}
+
+.dir-a .reveal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 10px;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.dir-a .reveal-actions .btn--amber,
+.dir-a .reveal-actions .btn--light {
+  flex: 1 1 100%;
+}
+
+.dir-a .reveal-said {
+  flex: 1 1 100%;
+  margin-bottom: 4px;
+}
+
+.dir-a .reveal.is-playing {
+  cursor: pointer;
+  background: none;
+}
+
+.dir-a .reveal.is-playing .reveal-actions {
+  pointer-events: none;
+}
+
+.dir-a .reveal.is-playing .reveal-dark {
+  animation: a-fade 240ms ease-out both;
+}
+
+.dir-a .reveal.is-playing .reveal-art {
+  animation: a-cover-grow 600ms var(--ease) 120ms both;
+}
+
+.dir-a .reveal.is-playing .reveal-back {
+  animation: a-fade 400ms ease-out 300ms both;
+}
+
+.dir-a .reveal.is-playing .reveal-scrim {
+  animation: a-fade 300ms ease-out 430ms both;
+}
+
+.dir-a .reveal.is-playing .reveal-rule {
+  animation: a-rule 320ms var(--ease) 470ms both;
+}
+
+.dir-a .reveal.is-playing .reveal-rise {
+  animation: a-rise 400ms var(--ease) 520ms both;
+}
+
+.dir-a .reveal.is-playing .reveal-credits,
+.dir-a .reveal.is-playing .reveal-actions {
+  animation: a-fade 220ms ease-out 720ms both;
+}
+
+/* Reduced motion: one short cross-fade of the finished card, nothing moves. */
+.dir-a .reveal.is-fade {
+  animation: a-fade 150ms linear both;
+  animation-duration: 150ms !important;
+}
+
+@keyframes a-cover-grow {
+  from { transform: scale(0.36); opacity: 0; border-radius: 12px; }
+  35% { opacity: 1; }
+}
+
+@keyframes a-rise {
+  from { transform: translateY(112%); }
+}
+
+@keyframes a-rule {
+  from { transform: scaleX(0); opacity: 0; }
+}
+
+@media (min-width: 900px) {
+  .dir-a .reveal:not(.reveal--contained) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: calc(min(66.6vh, 46vw) + 72px);
+    padding-right: 72px;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-back {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(64px) saturate(1.3);
+    transform: scale(1.3);
+    opacity: 0.5;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-art {
+    inset: 0 auto 0 0;
+    width: min(66.6vh, 46vw);
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-scrim {
+    background: linear-gradient(to bottom, rgb(14 17 22 / 0.72), rgb(14 17 22 / 0.86));
+    left: min(66.6vh, 46vw);
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-content {
+    justify-items: start;
+    max-width: 640px;
+    padding: 0;
+    text-align: left;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-credits .billing {
+    margin-inline: 0;
+    max-width: 20em;
+    font-size: 26px;
+    text-align: left;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-actions {
+    justify-content: flex-start;
+    margin-top: 28px;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-actions .btn--amber,
+  .dir-a .reveal:not(.reveal--contained) .reveal-actions .btn--light {
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
+
+  .dir-a .reveal:not(.reveal--contained) .reveal-said {
+    font-size: 18px;
+  }
+}
+
+/* ---------- cover → game page (View Transitions API) ---------- */
+/* These pseudo-elements live on the document root, so they cannot sit under .dir-a; the name is ours alone. */
+
+::view-transition-group(a-poster) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(a-poster),
+::view-transition-new(a-poster) {
+  height: 100%;
+  object-fit: cover;
+}
+
+html:has(.dir-a)::view-transition-old(root),
+html:has(.dir-a)::view-transition-new(root) {
+  animation-duration: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(a-poster),
+  ::view-transition-old(a-poster),
+  ::view-transition-new(a-poster) {
+    animation: none;
+  }
+}

@@ -1,0 +1,211 @@
+.dir-c {
+  .c-draw__top {
+    gap: 12px;
+  }
+  .c-draw__pool {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    width: 100%;
+  }
+  .c-draw__n {
+    font-size: 1.375rem;
+    color: var(--ficha);
+  }
+  .c-draw__narrow {
+    display: grid;
+    gap: 18px;
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--r-card);
+    background: var(--surface);
+  }
+  .c-draw__narrow .c-seg {
+    justify-self: start;
+  }
+  .c-draw__narrow .c-seg button {
+    padding-inline: 12px;
+  }
+
+  .c-stage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    min-height: max(500px, calc(100dvh - 300px));
+    margin-top: 16px;
+    background: var(--surface);
+  }
+  .c-stage--reveal,
+  .c-stage--result,
+  .c-stage--chosen {
+    color: var(--tinta);
+  }
+  .c-stage--chosen {
+    background: var(--coral);
+  }
+  .c-stage--reveal :focus-visible,
+  .c-stage--result :focus-visible,
+  .c-stage--chosen :focus-visible {
+    outline-color: var(--tinta);
+    box-shadow: 0 0 0 2px var(--text);
+  }
+  .c-flood {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .c-flood--coral {
+    background: var(--coral);
+  }
+  .c-flood--menta {
+    background: var(--menta);
+  }
+  .c-stage__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 16px;
+    padding: 20px var(--gutter) 32px;
+    text-align: center;
+  }
+  .c-stage__hint {
+    max-width: 32ch;
+    color: var(--muted);
+  }
+  .c-stage__text {
+    display: grid;
+    gap: 12px;
+    justify-items: center;
+  }
+  .c-stage__text p {
+    font-weight: 600;
+  }
+  .c-stage__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 12px;
+    padding-top: 6px;
+  }
+
+  .c-deck {
+    position: relative;
+    width: 128px;
+    aspect-ratio: 2 / 3;
+    margin: 22px 0 10px;
+  }
+  .c-deck__card {
+    position: absolute;
+    inset: 0;
+  }
+  .c-deck__card .c-cover {
+    height: 100%;
+    border: 3px solid var(--tinta);
+  }
+
+  /* The token: a coin with a visible edge that goes down while held. */
+  .c-token {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 140px;
+    height: 140px;
+    padding: 0;
+    border: 3px solid var(--tinta);
+    border-radius: 50%;
+    background: var(--ficha);
+    color: var(--tinta);
+    box-shadow: 0 9px 0 var(--ficha-deep), 0 9px 0 3px var(--tinta);
+    margin-bottom: 12px;
+    transition: transform 90ms, box-shadow 90ms;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .c-token::before {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 2px dashed var(--tinta);
+    border-radius: 50%;
+  }
+  .c-token:active,
+  .c-token[data-held] {
+    transform: translateY(7px);
+    box-shadow: 0 2px 0 var(--ficha-deep), 0 2px 0 3px var(--tinta);
+  }
+  .c-token__label {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.0625rem;
+    line-height: 1;
+  }
+
+  .c-reveal {
+    width: 168px;
+    perspective: 1000px;
+  }
+  .c-reveal__card {
+    position: relative;
+    aspect-ratio: 2 / 3;
+    transform-style: preserve-3d;
+  }
+  .c-reveal__face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 3px solid var(--tinta);
+    border-radius: var(--r-card);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .c-reveal__face .c-cover {
+    height: 100%;
+    border-radius: 0;
+  }
+  .c-reveal__back {
+    display: grid;
+    place-items: center;
+    transform: rotateY(180deg);
+    background: var(--tinta);
+    color: var(--ficha);
+  }
+  .c-reveal__title {
+    max-width: 18ch;
+  }
+
+  @media (min-width: 900px) {
+    .c-stage {
+      min-height: max(520px, calc(100dvh - 330px));
+    }
+    .c-stage__inner--result {
+      grid-template-columns: auto minmax(0, 420px);
+      justify-content: center;
+      align-items: center;
+      gap: 48px;
+      text-align: left;
+    }
+    .c-stage__inner--result .c-stage__text {
+      justify-items: start;
+    }
+    .c-stage__inner--result .c-stage__actions {
+      justify-content: flex-start;
+    }
+    .c-reveal {
+      width: 250px;
+    }
+    .c-deck {
+      width: 150px;
+    }
+    .c-reveal__title {
+      font-size: 3rem;
+    }
+  }
+}

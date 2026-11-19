@@ -1,0 +1,45 @@
+import type { DirectionMeta } from '../../lab/types'
+
+export const meta: DirectionMeta = {
+  slug: 'b',
+  name: 'Clube de dois',
+  idea: 'Um clube com exatamente dois sócios: tudo na tela diz de quem é, dele, dela ou dos dois, e o que é dos dois mora onde os círculos se sobrepõem.',
+  palette: [
+    { name: 'Fundo', hex: '#EFECF7', role: 'Lavanda leitosa, a página' },
+    { name: 'Superfície', hex: '#FCFBFF', role: 'Cartões, campos e painéis' },
+    { name: 'Tinta', hex: '#241A35', role: 'Texto, contornos de 2px e sombra dura' },
+    { name: 'Danilo', hex: '#17666E', role: 'O que é do Danilo, sempre com a inicial D' },
+    { name: 'Maellen', hex: '#BF3468', role: 'O que é da Maellen, sempre com a inicial M' },
+    { name: 'Nós dois', hex: '#F2C14E', role: 'O que é dos dois: matches, nota conjunta, sessões juntos' },
+    { name: 'Linha', hex: '#D9D3E8', role: 'Divisórias e contornos discretos' },
+  ],
+  fonts: [
+    { role: 'Display', family: 'Bricolage Grotesque', sample: 'O que vamos jogar hoje?' },
+    { role: 'Texto e interface', family: 'Onest', sample: 'Chegamos no capítulo do mercado.' },
+  ],
+  signature:
+    'A sobreposição: dois círculos, um de cada pessoa, e mostarda onde se cruzam. É a marca, o estado de “nós dois queremos” e o gráfico das notas, em que a distância entre os círculos mostra o quanto discordam.',
+  motion: [
+    { name: 'Sorteio em fila: as capas deslizam pela mesa por 4,2 s e freiam devagar no escolhido; as marcas dos dois pousam nele', where: '/b/sortear?jeito=fila' },
+    { name: 'Sorteio em pacote: rasgar o topo, duas cartas voam, a última vira e é o jogo de hoje', where: '/b/sortear?jeito=pacote' },
+    { name: 'A pílula da aba ativa desliza da aba antiga para a nova', where: '/b/estilo' },
+    { name: 'Com mouse: o que se aperta sobe com a sombra mais dura; links ganham sublinhado de marca-texto', where: '/b/estilo' },
+    { name: 'Prateleira: setas nos lados e arrasto com o mouse; a capa sob o cursor se endireita e sobe', where: '/b/' },
+    { name: 'O rosto do topo pisca uma vez quando o cursor ou o foco chega na marca', where: '/b/estilo' },
+    { name: 'Papel de parede e modo escuro trocam na hora, sem animação', where: '/b/perfil#papel' },
+    { name: 'Carimbo a dois ao marcar que zerou', where: '/b/jogo/split-fiction' },
+    { name: 'Círculos se juntam quando o segundo diz “quero”', where: '/b/jogo/sea-of-thieves' },
+    { name: 'Círculos da nota deslizam ao guardar a avaliação', where: '/b/jogo/cuphead?avaliar=1' },
+    { name: 'Painel de filtros sobe de baixo (celular) ou entra pelo lado (desktop)', where: '/b/biblioteca' },
+    { name: 'Tudo que se aperta afunda 2px', where: '/b/estilo' },
+    { name: 'Capa viaja da lista para a página do jogo, e volta', where: '/b/biblioteca' },
+    { name: 'Carregando: os dois círculos se afastam e voltam a se sobrepor', where: '/b/estilo' },
+    { name: 'Esqueletos com pulso leve enquanto os dados chegam', where: '/b/?lento=1' },
+    { name: 'Capas aparecem com fade quando a imagem chega', where: '/b/biblioteca' },
+    { name: 'Troca de página com fade curto', where: '/b/diario' },
+    { name: 'Painel de filtros sai por onde entrou', where: '/b/biblioteca' },
+    { name: 'Zeramos juntos: uma única rajada de papel nas duas cores quando cai o segundo carimbo', where: '/b/jogo/we-were-here-together' },
+    { name: 'Marca-texto: o traço mostarda é riscado da esquerda para a direita, uma vez, atrás do que é dos dois', where: '/b/nos' },
+    { name: 'Entrada: os dois círculos chegam e se sobrepõem', where: '/b/entrar' },
+  ],
+}

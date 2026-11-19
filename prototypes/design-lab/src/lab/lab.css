@@ -1,0 +1,246 @@
+/* Comparison page. Deliberately neutral so it does not compete with the three directions. */
+.lab {
+  --ink: #17171a;
+  --muted: #5b5b63;
+  --line: #d8d8d3;
+  --paper: #f1f1ee;
+  --card: #ffffff;
+  min-height: 100dvh;
+  padding: 24px 16px 48px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.lab a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.lab :focus-visible {
+  outline: 3px solid #1f5fd1;
+  outline-offset: 2px;
+}
+
+.lab-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+  max-width: 1320px;
+  margin: 0 auto 20px;
+}
+
+.lab-header h1 {
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lab-header p {
+  max-width: 62ch;
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.lab-viewer {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lab-viewer legend {
+  padding: 0 0 6px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.lab-viewer label {
+  position: relative;
+}
+
+.lab-viewer input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.lab-viewer span {
+  display: grid;
+  place-items: center;
+  min-width: 96px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.lab-viewer input:checked + span {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.lab-viewer input:focus-visible + span {
+  outline: 3px solid #1f5fd1;
+  outline-offset: 2px;
+}
+
+.lab-screens {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  max-width: 1320px;
+  margin: 0 auto 24px;
+  padding: 8px 0;
+  overflow-x: auto;
+  background: var(--paper);
+  scrollbar-width: thin;
+}
+
+.lab-screens button {
+  flex: none;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  white-space: nowrap;
+}
+
+.lab-screens button[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.lab-grid {
+  display: grid;
+  gap: 40px 28px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.lab-direction h2 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 1.375rem;
+  line-height: 1.2;
+}
+
+.lab-letter {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.lab-idea {
+  min-height: 4.5em;
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.lab-direction h3 {
+  margin: 24px 0 8px;
+  font-size: 1rem;
+}
+
+/* Phone frames only make sense when there is room for them; on phones the links below are the way in. */
+.lab-frame {
+  display: none;
+}
+
+.lab-open {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.lab-open a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.lab-palette {
+  display: grid;
+  gap: 6px;
+}
+
+.lab-palette li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.lab-swatch {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgb(0 0 0 / 0.18);
+  border-radius: 6px;
+}
+
+.lab code {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.lab-list {
+  display: grid;
+  gap: 4px;
+  padding-left: 1.1em;
+  list-style: disc;
+}
+
+.lab-footer {
+  max-width: 1320px;
+  margin: 48px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+@media (min-width: 720px) {
+  .lab {
+    padding: 40px 32px 64px;
+  }
+
+  .lab-frame {
+    display: block;
+    width: 375px;
+    max-width: 100%;
+    height: 760px;
+    margin-top: 16px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: var(--card);
+  }
+
+  .lab-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+@media (min-width: 1240px) {
+  .lab-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

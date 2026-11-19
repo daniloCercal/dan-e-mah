@@ -1,0 +1,483 @@
+/* Direction A: the game page, ratings and the in-place editors. */
+
+/* Dynamic tint: a blurred, darkened copy of the cover sits behind the whole page. */
+.dir-a .tint {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dir-a .tint img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(56px) saturate(1.35);
+  transform: scale(1.3);
+  opacity: 0.62;
+}
+
+.dir-a .tint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgb(14 17 22 / 0.5) 0%, rgb(14 17 22 / 0.8) 48%, rgb(14 17 22 / 0.94) 100%);
+}
+
+.dir-a .game-still {
+  position: relative;
+  height: 232px;
+}
+
+.dir-a .game-still img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
+  /* The still dissolves into the tinted page instead of ending on a hard edge. */
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+}
+
+.dir-a .game-still-scrim {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 96px;
+  background: linear-gradient(to bottom, rgb(14 17 22 / 0.7), rgb(14 17 22 / 0));
+}
+
+.dir-a .game-still .back {
+  position: absolute;
+  top: 10px;
+  left: calc(var(--gutter) - 10px);
+  background: rgb(14 17 22 / 0.72);
+}
+
+.dir-a .game-layout {
+  position: relative;
+  padding: 0 var(--gutter);
+}
+
+.dir-a .game-poster {
+  width: 148px;
+  margin-top: -104px;
+}
+
+.dir-a .game-title {
+  margin-top: 20px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(40px, 11vw, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.dir-a .game-head .billing {
+  margin-top: 16px;
+}
+
+@media (min-width: 900px) {
+  .dir-a .game-still {
+    height: 440px;
+  }
+
+  .dir-a .game-still img {
+    mask-image: linear-gradient(to bottom, #000 30%, transparent 100%);
+  }
+
+  /* On wide screens the title sits on the still, so the scrim also covers its lower half. */
+  .dir-a .game-still-scrim {
+    height: 100%;
+    background: linear-gradient(to bottom, rgb(14 17 22 / 0.6) 0%, rgb(14 17 22 / 0) 22%, rgb(14 17 22 / 0.1) 45%, rgb(14 17 22 / 0.78) 100%);
+  }
+
+  .dir-a .game-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 720px);
+    gap: 64px;
+    max-width: 1344px;
+    margin: 0 auto;
+  }
+
+  .dir-a .game-poster {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+    width: auto;
+    margin-top: -220px;
+  }
+
+  .dir-a .game-main {
+    margin-top: -132px;
+  }
+
+  .dir-a .game-title {
+    margin-top: 0;
+  }
+}
+
+/* ---------- three independent states ---------- */
+
+.dir-a .state {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dir-a .state > label,
+.dir-a .state > span:first-child {
+  font-weight: 500;
+}
+
+.dir-a .select--tag select {
+  min-height: 44px;
+  padding: 0 30px 0 12px;
+  border-color: transparent;
+  background: none;
+  font-size: 15.5px;
+  font-weight: 600;
+  text-align: right;
+  text-align-last: right;
+}
+
+.dir-a .select--tag .icon {
+  right: 4px;
+}
+
+.dir-a .select--tag.is-signal select {
+  color: var(--signal);
+}
+
+.dir-a .select--tag select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Marking as finished: a line closes across the row, like the rule under “fim”. */
+.dir-a .state.is-settled::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 1px;
+  background: var(--text);
+  transform-origin: left;
+  animation: a-close-line 420ms var(--ease) both;
+}
+
+@keyframes a-close-line {
+  from { transform: scaleX(0); }
+}
+
+/* ---------- ratings ---------- */
+
+.dir-a .numeral {
+  font-family: var(--display);
+  font-size: 56px;
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.dir-a .numeral--none {
+  color: var(--muted);
+  font-size: 30px;
+  line-height: 56px;
+}
+
+.dir-a .numeral--big {
+  font-size: 76px;
+}
+
+.dir-a .numeral.is-fresh {
+  animation: a-settle 320ms var(--ease) both;
+}
+
+@keyframes a-settle {
+  from { transform: translateY(10px); opacity: 0; }
+}
+
+.dir-a .pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.dir-a .pair-col {
+  min-width: 0;
+  padding-right: 16px;
+}
+
+.dir-a .pair-col + .pair-col {
+  padding: 0 0 0 16px;
+  border-left: 1px solid var(--line);
+}
+
+.dir-a .pair-name,
+.dir-a .blurb-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dir-a .pair-name {
+  margin-bottom: 6px;
+}
+
+.dir-a .pair-quote {
+  margin-top: 10px;
+  text-wrap: pretty;
+}
+
+.dir-a .pair-verdict {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.dir-a .joint {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.dir-a .joint dt {
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.dir-a .joint dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1.15;
+  font-variant-numeric: lining-nums;
+}
+
+.dir-a .joint dd.is-accent {
+  color: var(--amber);
+}
+
+.dir-a .joint-invite {
+  max-width: 48ch;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.dir-a .ratings > .btn {
+  margin-top: 18px;
+}
+
+/* “Crítica dividida”: two blurbs facing each other, one flush left, one flush right. */
+.dir-a .split {
+  display: grid;
+  gap: 0;
+}
+
+.dir-a .blurb {
+  display: grid;
+  gap: 8px;
+  max-width: 88%;
+}
+
+.dir-a .blurb--against {
+  justify-self: end;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  text-align: right;
+  width: 88%;
+}
+
+.dir-a .blurb .numeral {
+  font-size: 72px;
+}
+
+.dir-a .blurb--against .numeral {
+  color: var(--muted);
+}
+
+.dir-a .blurb-quote {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 27px;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.dir-a .blurb figcaption {
+  display: grid;
+  gap: 0;
+}
+
+.dir-a .blurb .pair-verdict {
+  margin-top: 2px;
+}
+
+@media (min-width: 600px) {
+  .dir-a .split {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dir-a .blurb,
+  .dir-a .blurb--against {
+    max-width: none;
+    width: auto;
+  }
+
+  .dir-a .blurb--for {
+    padding-right: 28px;
+  }
+
+  .dir-a .blurb--against {
+    margin-top: 0;
+    padding: 0 0 0 28px;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    align-content: start;
+  }
+
+  .dir-a .blurb-quote {
+    font-size: 32px;
+  }
+}
+
+/* ---------- in-place editors ---------- */
+
+.dir-a .editor,
+.dir-a .session-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 20px 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  animation: a-fade 180ms ease-out both;
+}
+
+.dir-a .editor-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.dir-a .editor-score .numeral {
+  min-width: 2.4ch;
+  text-align: center;
+}
+
+.dir-a .range {
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.dir-a .range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: linear-gradient(to right, var(--text) var(--fill, 50%), var(--edge) var(--fill, 50%));
+}
+
+.dir-a .range::-moz-range-track {
+  height: 2px;
+  background: var(--edge);
+}
+
+.dir-a .range::-moz-range-progress {
+  height: 2px;
+  background: var(--text);
+}
+
+.dir-a .range::-webkit-slider-thumb {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -13px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.dir-a .range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+.dir-a .range-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -14px;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dir-a .editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.dir-a .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dir-a .actions .btn {
+  padding: 0 14px;
+}
+
+.dir-a .wants-note {
+  margin-top: 10px;
+}
+
+.dir-a .wants-note:empty {
+  display: none;
+}
+
+/* ---------- tags ---------- */
+
+.dir-a .tags > div {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dir-a .tags dt {
+  padding-top: 11px;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.dir-a .tags dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 18px;
+  margin: 0;
+}
+
+.dir-a .tag-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration-color: var(--edge);
+}
+
+.dir-a .tag-link:active {
+  opacity: 0.6;
+}

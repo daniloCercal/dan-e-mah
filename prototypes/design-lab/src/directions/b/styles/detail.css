@@ -1,0 +1,148 @@
+/* Direction B — game details, ratings, stamps. */
+.dir-b {
+  .backbtn {
+    display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 16px 0 10px;
+    background: var(--surface); border: 2px solid var(--ink); border-radius: 999px; font-weight: 600;
+    box-shadow: 2px 2px 0 var(--ink); transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+    &:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+  }
+  .page > .backbtn { margin-bottom: 16px; }
+
+  .detail-hero {
+    position: relative; height: 170px; margin: -8px -16px 0; overflow: hidden;
+    background: var(--table); border-block: 2px solid var(--ink);
+    img { width: 100%; height: 100%; object-fit: cover; }
+    .backbtn { position: absolute; top: 12px; left: 12px; }
+  }
+  .detail-head {
+    position: relative; display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 16px;
+    margin-top: -48px;
+    .cover { box-shadow: var(--shadow); }
+    > div { padding-top: 60px; display: flex; flex-direction: column; gap: 4px; }
+    .h1 { overflow-wrap: anywhere; }
+  }
+
+  .detail-cols { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+  .detail-main, .detail-side { display: contents; }
+  .detail .sec { margin-top: 8px; }
+  .states { order: 1; }
+  .want { order: 2; }
+  .actions { order: 3; }
+  .detail-main > .editor { order: 4; }
+  .ratings { order: 5; }
+  .stampcard { order: 6; }
+  .o-tags { order: 7; }
+  .o-sessions { order: 8; }
+  .o-about { order: 9; }
+  .o-manage { order: 10; }
+
+  .want {
+    display: flex; align-items: center; gap: 14px; padding: 14px;
+    background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card);
+  }
+  .want-text { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
+  .want-state { font-weight: 600; line-height: 1.3; }
+  .want-state--both { padding: 2px 10px; background: var(--both); border-radius: 8px; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; .btn { padding-inline: 10px; } }
+
+  .states { padding: 16px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card); }
+  .states-help { margin: 2px 0 8px; font-size: 0.875rem; }
+  .states-help:last-child { margin: 8px 0 0; }
+  .state {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 60px;
+    border-top: 1px solid var(--line);
+    .select { flex: 0 1 190px; }
+  }
+  .state-who { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+  .state-fixed { font-weight: 500; padding-right: 14px; }
+
+  .stampcard { padding: 16px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card); }
+  .stampcard--both { background: var(--both); border: 2px solid var(--ink); .stamp { background: var(--surface); } }
+  .stamp-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .stamp-slot { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .stamp-who { font-size: 0.9375rem; font-weight: 500; line-height: 1.3; }
+  .stamp-empty {
+    display: grid; place-items: center; width: 52px; height: 52px;
+    color: var(--line-strong); border: 2px dashed var(--line-strong); border-radius: 50%;
+    font-family: var(--font-d); font-weight: 800; font-size: 26px;
+  }
+
+  /* ---------- ratings ---------- */
+  .rating-card { padding: 18px 12px 16px; background: var(--surface); border: 1.5px solid var(--line-strong); border-radius: var(--r-card); }
+  .rline { display: block; width: 100%; max-width: 460px; height: auto; margin-inline: auto; overflow: visible; }
+  .rl-track { stroke: var(--line-strong); stroke-width: 2; stroke-linecap: round; }
+  .rl-tick { stroke: var(--ink-2); stroke-width: 1.5; }
+  .rl-num { fill: var(--ink-2); font-family: var(--font-t); font-size: 13px; }
+  .rl-gap { stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 1 7; stroke-linecap: round; }
+  .rl-val { fill: var(--ink); font-family: var(--font-d); font-weight: 750; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .joint { display: grid; justify-items: center; gap: 8px; margin-top: 10px; text-align: center; }
+  .joint-avg {
+    display: inline-flex; align-items: center; gap: 8px; padding: 4px 16px 4px 12px;
+    background: var(--both); border: 2px solid var(--ink); border-radius: 999px; font-weight: 600;
+    strong { font-family: var(--font-d); font-weight: 800; font-stretch: 85%; font-size: 1.625rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  }
+  .joint-gap { font-weight: 500; max-width: 34ch; text-wrap: balance; }
+  .joint-missing { margin-top: 10px; text-align: center; color: var(--ink-2); text-wrap: balance; }
+  .saved-msg { font-weight: 600; &:not(:empty) { margin-top: 10px; } }
+
+  .reviews { display: grid; gap: 12px; margin-top: 12px; }
+  .review { padding: 14px; background: var(--who-soft); border-radius: var(--r-card); }
+  .review-head { display: flex; align-items: center; gap: 8px; }
+  .review-name { flex: 1; font-weight: 600; line-height: 1.2; }
+  .review-score { font-family: var(--font-d); font-weight: 800; font-stretch: 80%; font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+  .review-quote {
+    margin-top: 10px; font-family: var(--font-d); font-weight: 550; font-size: 1.1875rem; line-height: 1.25;
+    &::before { content: '“'; }
+    &::after { content: '”'; }
+  }
+  .review-facts { margin-top: 8px; font-size: 0.875rem; color: var(--ink); opacity: 0.82; }
+  .ratings > .editor { margin-top: 12px; }
+
+  /* Strong disagreement: the two reviews face each other. */
+  .ratings--split {
+    .rating-card { border: 2px solid var(--ink); }
+    .reviews { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .review { padding: 12px; }
+    .review-head { flex-wrap: wrap; }
+    .review-score { font-size: 2.5rem; flex-basis: 100%; order: 3; margin-top: 6px; }
+    .review-quote { font-size: 1.0625rem; }
+  }
+
+  .editor-top { display: flex; align-items: flex-end; justify-content: space-between; }
+  .editor-value { font-family: var(--font-d); font-weight: 800; font-stretch: 80%; font-size: 3.25rem; line-height: 0.9; color: var(--who, var(--ink)); font-variant-numeric: tabular-nums; }
+  .slider {
+    appearance: none; width: 100%; height: 44px; margin: 0; background: transparent;
+    &::-webkit-slider-runnable-track {
+      height: 12px; border: 2px solid var(--ink); border-radius: 999px;
+      background: linear-gradient(to right, var(--who, var(--ink)) var(--fill), var(--bg) var(--fill));
+    }
+    &::-webkit-slider-thumb {
+      appearance: none; width: 34px; height: 34px; margin-top: -13px;
+      background: var(--surface); border: 2px solid var(--ink); border-radius: 50%; box-shadow: 2px 2px 0 var(--ink);
+    }
+    &::-moz-range-track { height: 8px; border: 2px solid var(--ink); border-radius: 999px; background: var(--bg); }
+    &::-moz-range-progress { height: 8px; background: var(--who, var(--ink)); border-radius: 999px; }
+    &::-moz-range-thumb { width: 30px; height: 30px; background: var(--surface); border: 2px solid var(--ink); border-radius: 50%; }
+  }
+  .slider-scale { display: flex; justify-content: space-between; margin-top: -8px; color: var(--ink-2); font-size: 0.875rem; }
+  .switches { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+  .about { max-width: 62ch; margin-bottom: 8px; }
+
+  @media (min-width: 900px) {
+    .detail-hero { height: 300px; margin: 0; border: 2px solid var(--ink); border-radius: var(--r-card); .backbtn { top: 16px; left: 16px; } }
+    .detail-head {
+      grid-template-columns: 184px minmax(0, 1fr); gap: 28px; margin-top: -110px; padding-inline: 32px;
+      > div { padding-top: 126px; }
+    }
+    .detail-cols { display: grid; grid-template-columns: minmax(0, 1fr) 372px; gap: 56px; margin-top: 40px; align-items: start; }
+    .detail-main, .detail-side { display: flex; flex-direction: column; gap: 24px; }
+    .detail .sec { margin-top: 16px; }
+    .detail .sec--tight { margin-top: 0; }
+    .actions { grid-template-columns: repeat(2, max-content); }
+    .actions .btn { padding-inline: 20px; }
+    .reviews { grid-template-columns: 1fr 1fr; }
+    .ratings--split .review { padding: 18px; }
+    .ratings--split .review-score { font-size: 3.5rem; }
+    .ratings--split .review-quote { font-size: 1.375rem; }
+  }
+}
