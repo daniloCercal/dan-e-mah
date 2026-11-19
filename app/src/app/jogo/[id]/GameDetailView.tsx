@@ -14,6 +14,8 @@ import { IconBack, IconCheck, PairGlyph } from '@/components/icons'
 import { Marker } from '@/components/Marker'
 import { Mark, Stamp, defaultName } from '@/components/Marks'
 import { Overlap } from '@/components/Overlap'
+import type { GameReviews } from '@/lib/data/reviews'
+import { RatingBlock } from './RatingBlock'
 import { SaveButton, SaveError } from '@/components/States'
 import { useToast } from '@/components/Toast'
 
@@ -168,7 +170,7 @@ function OurTags({ game, ours }: { game: GameDetail; ours: Tag[] }) {
   )
 }
 
-export function GameDetailView({ game, me, ourTags }: { game: GameDetail; me: Person; ourTags: Tag[] }) {
+export function GameDetailView({ game, me, ourTags, reviews }: { game: GameDetail; me: Person; ourTags: Tag[]; reviews: GameReviews }) {
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
@@ -180,6 +182,7 @@ export function GameDetailView({ game, me, ourTags }: { game: GameDetail; me: Pe
   const wantSave = useSave()
   const [draft, setDraft] = useState<{ shared?: Status; mine?: Status; wants?: boolean } | null>(null)
   const editing = params.get('editar') === '1'
+  const [rating, setRating] = useState(() => params.get('avaliar') === '1')
   const toast = useToast()
 
   const setEditing = (on: boolean) => router.replace(on ? `${pathname}?editar=1` : pathname, { scroll: false })
@@ -261,7 +264,15 @@ export function GameDetailView({ game, me, ourTags }: { game: GameDetail; me: Pe
             </div>
           </section>
 
+          <div className="actions">
+            <button type="button" className="btn btn--ink" aria-expanded={rating} onClick={() => setRating(!rating)}>
+              {reviews[me] ? 'Mudar minha nota' : 'Avaliar'}
+            </button>
+          </div>
+
           {editing && <EditGame game={game} onDone={() => setEditing(false)} />}
+
+          <RatingBlock gameId={game.id} me={me} reviews={reviews} editing={rating} setEditing={setRating} />
         </div>
 
         <aside className="detail-side">

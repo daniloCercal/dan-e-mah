@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getGame } from '@/lib/data/games'
+import { getReviews } from '@/lib/data/reviews'
 import { listTags } from '@/lib/data/tags'
 import { requireViewer } from '@/lib/data/viewer'
 import { GameDetailView } from './GameDetailView'
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: PageProps<'/jogo/[id]'>): Pro
 export default async function GamePage({ params }: PageProps<'/jogo/[id]'>) {
   const { id } = await params
   if (!/^\d{1,12}$/.test(id)) notFound()
-  const [viewer, game, tags] = await Promise.all([requireViewer(), getGame(Number(id)), listTags()])
+  const [viewer, game, tags, reviews] = await Promise.all([requireViewer(), getGame(Number(id)), listTags(), getReviews(Number(id))])
   if (!game) notFound()
-  return <GameDetailView game={game} me={viewer.me.person} ourTags={tags.filter((t) => t.kind === 'nossa')} />
+  return <GameDetailView game={game} me={viewer.me.person} ourTags={tags.filter((t) => t.kind === 'nossa')} reviews={reviews} />
 }

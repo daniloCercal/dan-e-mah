@@ -46,3 +46,13 @@ export const ratingGap = (g: { ratings: Ratings }): number | null =>
 
 export const formatRating = (n: number | null | undefined): string =>
   n === null || n === undefined ? '–' : n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+
+/** Short line about how far apart the two ratings are. */
+export function gapLine(gap: number): string {
+  const n = gap.toLocaleString('pt-BR')
+  if (gap >= 4) return `${n} pontos de distância. Nesse aqui o clube rachou ao meio.`
+  if (gap >= 2.5) return `${n} pontos de distância. Dá para conversar, mas vai demorar.`
+  if (gap >= 1) return `${n} ${gap === 1 ? 'ponto' : 'pontos'} de diferença. Nada que estrague o jantar.`
+  if (gap > 0) return 'Meio ponto de diferença. Praticamente a mesma pessoa.'
+  return 'Mesma nota, sem combinar. Acontece pouco.'
+}
